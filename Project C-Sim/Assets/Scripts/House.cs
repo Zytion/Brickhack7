@@ -21,7 +21,6 @@ public class House : Building
 
     public void SpawnRandomResidents()
     {
-        Debug.Log(gameManager);
         // Generate NumberOfResident number of people for this house.
         for(int i = 0; i < this.NumberOfResidents; i++)
         {
@@ -30,7 +29,6 @@ public class House : Building
             personScript.AssignRandomAttributes();
             personScript.home = this.gameObject;
             personScript.gameManager = this.gameManager;
-            Debug.Log(personScript.gameManager);
             people.Add(newPerson);
         }
     }

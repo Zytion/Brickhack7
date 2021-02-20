@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     public Vector2 SimulationPosition { get; set; }
     public int NumberOfHouses { get; set; }
     public int NumberOfPointsOfInterest { get; set; }
-    private List<Vector2> buildingPositions;
+    private List<Vector2> poiPositions;
+    private List<Vector2> housePositions;
     private GameObject housePrefab;
     private List<GameObject> poiPrefabs;
     private float scaleFactor;
@@ -25,7 +26,8 @@ public class GameManager : MonoBehaviour
         buildingHalfWidth = scaleFactor / 2.0f;
         Debug.Log(buildingHalfWidth);
         InitializePrefabs();
-        buildingPositions = new List<Vector2>();
+        poiPositions = new List<Vector2>();
+        housePositions = new List<Vector2>();
         GameObject simulation = GameObject.Find("Simulation");
         SimulationExtents = simulation.GetComponent<BoxCollider2D>().bounds.extents;
         SimulationPosition = simulation.transform.position;
@@ -81,14 +83,17 @@ public class GameManager : MonoBehaviour
                                  + (Random.Range(0, (int)((SimulationExtents.y * 2 / (buildingHalfWidth * 2)))) 
                                  * buildingHalfWidth * 2);
                 buildingPosition = new Vector2(randomX, randomY);
-            } while (buildingPositions.Contains(buildingPosition));
+            } while (poiPositions.Contains(buildingPosition) || housePositions.Contains(buildingPosition));
 
-            buildingPositions.Add(buildingPosition);
             GameObject house = Instantiate(isPOI ? GetRandomPointOfInterest() : prefab, buildingPosition, Quaternion.identity);
             if (!isPOI)
             {
                 house.GetComponent<House>().gameManager = this;
-                //house.GetComponent<House>().SpawnRandomResidents();
+                housePositions.Add(buildingPosition);
+            }
+            else
+            {
+                poiPositions.Add(buildingPosition);
             }
         }
         
@@ -106,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     public Vector2 GetRandomBuilding()
     {
-        return buildingPositions[Random.Range(0, buildingPositions.Count)];
+        return poiPositions[Random.Range(0, poiPositions.Count)];
     }
     
     /// <summary>

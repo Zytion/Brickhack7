@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum Sex
 {
@@ -31,7 +29,7 @@ public class Person : MonoBehaviour
         moving = false;
         inHouse = true;
         rb = GetComponent<Rigidbody2D>();
-        Debug.Log(gameManager);
+        speed = .5f;
     }
 
     public void AssignRandomAttributes()
@@ -63,7 +61,6 @@ public class Person : MonoBehaviour
             // Person in in house, so move person to a different building
             if (inHouse)
             {
-                Debug.Log(gameManager);
                 destination = gameManager.GetRandomBuilding();
             }
             // Move person back to home.
@@ -71,6 +68,7 @@ public class Person : MonoBehaviour
             {
                 destination = home.transform.position;
             }
+            Debug.Log(destination);
             inHouse = !inHouse;
         }
     }
