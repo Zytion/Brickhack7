@@ -8,10 +8,8 @@ public class GameManager : MonoBehaviour
     public Vector2 SimulationPosition { get; set; }
     public int NumberOfHouses { get; set; }
     public int NumberOfPointsOfInterest { get; set; }
-    public bool hasTownCenter;
     private List<Vector2> buildingPositions;
     private GameObject housePrefab;
-    private GameObject townCenterPrefab;
     private List<GameObject> poiPrefabs;
     private float scaleFactor;
     private float buildingHalfWidth;
@@ -21,10 +19,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Start()
     {
-        hasTownCenter = true;
-        NumberOfHouses = 5;
+        NumberOfHouses = 1;
         NumberOfPointsOfInterest = 5;
-        scaleFactor = 0.5f;
+        scaleFactor = 1f;
         buildingHalfWidth = scaleFactor / 2.0f;
         Debug.Log(buildingHalfWidth);
         InitializePrefabs();
@@ -42,8 +39,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void InitializePrefabs()
     {
-        townCenterPrefab = Resources.Load<GameObject>("Buildings/TownCenter");
-        townCenterPrefab.transform.localScale = new Vector2(scaleFactor, scaleFactor);
         housePrefab = Resources.Load<GameObject>("Buildings/House");
         housePrefab.transform.localScale = new Vector2(scaleFactor, scaleFactor);
         poiPrefabs = new List<GameObject>();
@@ -51,6 +46,8 @@ public class GameManager : MonoBehaviour
         poiPrefabs[0].transform.localScale = new Vector2(scaleFactor, scaleFactor);
         poiPrefabs.Add(Resources.Load<GameObject>("Buildings/POI2"));
         poiPrefabs[1].transform.localScale = new Vector2(scaleFactor, scaleFactor);
+        poiPrefabs.Add(Resources.Load<GameObject>("Buildings/POI3"));
+        poiPrefabs[2].transform.localScale = new Vector2(scaleFactor, scaleFactor);
     }
 
     /// <summary>
@@ -58,37 +55,41 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void BeginSimulation()
     {
-        // Generate a town center.
-        if (hasTownCenter)
-        {
-            Instantiate(townCenterPrefab, Vector2.zero, Quaternion.identity);
-            buildingPositions.Add(Vector2.zero);
-        }
         // Generate a random number of houses.
-        SpawnRandomBuildings(NumberOfHouses, housePrefab);
+        SpawnRandomBuildings(NumberOfHouses, false, housePrefab);
         // Generate a random number of points of interest.
-        SpawnRandomBuildings(NumberOfPointsOfInterest, GetRandomPointOfInterest());
+        SpawnRandomBuildings(NumberOfPointsOfInterest, true, null);
     }
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="num"></param>
+    /// <param name="isPOI"></param>
     /// <param name="prefab"></param>
-    public void SpawnRandomBuildings(int num, GameObject prefab)
+    public void SpawnRandomBuildings(int num, bool isPOI, GameObject prefab)
     {
         for(int i = 0; i < num; i++)
         {
             Vector2 buildingPosition;
             do
             {
-                float randomX = (SimulationPosition.x - SimulationExtents.x + buildingHalfWidth) + (Random.Range(0, (int)((SimulationExtents.x * 2 / (buildingHalfWidth * 2)))) * buildingHalfWidth * 2);
-                float randomY = (SimulationPosition.y - SimulationExtents.y + buildingHalfWidth) + (Random.Range(0, (int)((SimulationExtents.y * 2 / (buildingHalfWidth * 2)))) * buildingHalfWidth * 2);
-                Debug.Log(randomX + "," + randomY);
+                float randomX = (SimulationPosition.x - SimulationExtents.x + buildingHalfWidth) 
+                                 + (Random.Range(0, (int)((SimulationExtents.x * 2 / (buildingHalfWidth * 2)))) 
+                                 * buildingHalfWidth * 2);
+                float randomY = (SimulationPosition.y - SimulationExtents.y + buildingHalfWidth) 
+                                 + (Random.Range(0, (int)((SimulationExtents.y * 2 / (buildingHalfWidth * 2)))) 
+                                 * buildingHalfWidth * 2);
                 buildingPosition = new Vector2(randomX, randomY);
             } while (buildingPositions.Contains(buildingPosition));
 
             buildingPositions.Add(buildingPosition);
-            GameObject house = Instantiate(prefab, buildingPosition, Quaternion.identity);
+            GameObject house = Instantiate(isPOI ? GetRandomPointOfInterest() : prefab, buildingPosition, Quaternion.identity);
+            if (!isPOI)
+            {
+                house.GetComponent<House>().gameManager = this;
+                //house.GetComponent<House>().SpawnRandomResidents();
+            }
         }
         
     }
@@ -101,6 +102,11 @@ public class GameManager : MonoBehaviour
     {
         int random = Random.Range(0, poiPrefabs.Count);
         return poiPrefabs[random];
+    }
+
+    public Vector2 GetRandomBuilding()
+    {
+        return buildingPositions[Random.Range(0, buildingPositions.Count)];
     }
     
     /// <summary>
