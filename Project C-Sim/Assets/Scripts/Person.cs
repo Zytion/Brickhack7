@@ -29,7 +29,7 @@ public class Person : MonoBehaviour
         moving = false;
         inHouse = true;
         rb = GetComponent<Rigidbody2D>();
-        speed = .5f;
+        speed = 5f;
     }
 
     public void AssignRandomAttributes()
@@ -85,7 +85,7 @@ public class Person : MonoBehaviour
 
         Vector2 netForce;
         netForce = Seek(destination);
-        rb.AddForce(destination);
+        rb.AddForce(netForce);
     }
 
     /// <summary>
