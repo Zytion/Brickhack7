@@ -12,11 +12,14 @@ public class Person : MonoBehaviour
 
     public GameObject home { get; set; }
     public GameManager gameManager { get; set; }
+    public bool Moving { get; set; }
+    public bool SocialDistancing { get; set; }
 
     private float moveTimer;
     private float coolDown;
-    private bool moving;
     private bool inHouse;
+    private bool closeToDest;
+    private float destinationRadius;
     private Vector2 destination;
     private float speed;
     private Rigidbody2D rb;
@@ -26,10 +29,13 @@ public class Person : MonoBehaviour
     {
         moveTimer = 0;
         coolDown = Random.Range(1.0f, 5.0f);
-        moving = false;
+        Moving = false;
         inHouse = true;
         rb = GetComponent<Rigidbody2D>();
         speed = 5f;
+        closeToDest = false;
+        destinationRadius = 1f;
+        SocialDistancing = true;
     }
 
     public void AssignRandomAttributes()
@@ -41,7 +47,7 @@ public class Person : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        if (!moving)
+        if (!Moving)
         {
             moveTimer += Time.deltaTime;
         }
@@ -57,7 +63,7 @@ public class Person : MonoBehaviour
         {
             moveTimer = 0;
             coolDown = Random.Range(1.0f, 5.0f);
-            moving = true;
+            Moving = true;
             // Person in in house, so move person to a different building
             if (inHouse)
             {
@@ -78,13 +84,19 @@ public class Person : MonoBehaviour
         //If destination is reached
         if(Vector3.SqrMagnitude((Vector2)transform.position - destination) < 0.1f * 0.1f)
         {
-            moving = false;
+            Moving = false;
             rb.velocity = Vector3.zero;
             return;
         }
 
+        closeToDest = Vector3.SqrMagnitude((Vector2)transform.position - destination) < destinationRadius * destinationRadius;
+
         Vector2 netForce;
         netForce = Seek(destination);
+        if (!closeToDest && SocialDistancing)
+        {
+            netForce += gameManager.GetSeperation(this.gameObject);
+        }
         rb.AddForce(netForce);
     }
 
