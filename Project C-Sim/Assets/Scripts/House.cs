@@ -7,23 +7,28 @@ public class House : Building
     public GameObject personPrefab { get; set; }
     public List<GameObject> people { get; set; }
 
+    public GameManager gameManager { get; set; }
+
     // Start is called before the first frame update
     public void Start()
     {
-        this.NumberOfResidents = Random.Range(1, 5);
-        this.personPrefab = Resources.Load<GameObject>("Person");
+        NumberOfResidents = 1;
+        personPrefab = Resources.Load<GameObject>("Person");
+        personPrefab.transform.localScale = new Vector2(.5f, .5f);
         people = new List<GameObject>();
         SpawnRandomResidents();
     }
 
-    private void SpawnRandomResidents()
+    public void SpawnRandomResidents()
     {
         // Generate NumberOfResident number of people for this house.
         for(int i = 0; i < this.NumberOfResidents; i++)
         {
             GameObject newPerson = Instantiate(personPrefab, this.transform.position, Quaternion.identity);
-            Person personScript = newPerson.AddComponent<Person>();
+            Person personScript = newPerson.GetComponent<Person>();
             personScript.AssignRandomAttributes();
+            personScript.home = this.gameObject;
+            personScript.gameManager = this.gameManager;
             people.Add(newPerson);
         }
     }
