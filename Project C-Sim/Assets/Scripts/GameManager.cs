@@ -149,6 +149,7 @@ public class GameManager : MonoBehaviour
                 randomIndex = ++randomIndex % People.Count;
             }
             People[randomIndex].GetComponent<Person>().Infected = true;
+            indiciesUsed.Add(randomIndex);
             count++;
         }
 
@@ -166,6 +167,7 @@ public class GameManager : MonoBehaviour
                 randomIndex = ++randomIndex % People.Count;
             }
             People[randomIndex].GetComponent<Person>().HasMask = true;
+            indiciesUsed.Add(randomIndex);
             count++;
         }
 
@@ -182,6 +184,7 @@ public class GameManager : MonoBehaviour
                 randomIndex = ++randomIndex % People.Count;
             }
             People[randomIndex].GetComponent<Person>().SocialDistancing = true;
+            indiciesUsed.Add(randomIndex);
             count++;
         }
 
@@ -310,7 +313,7 @@ public class GameManager : MonoBehaviour
                     else
                         distance = Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position);
 
-                    float infectionChance = (1 / (distance / 4 + 1 / 6)) / 200;
+                    float infectionChance = (1 / (distance + 1 / 5)) / 200;
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= People[j].GetComponent<Person>().Recovered ? 0.1f : 1.0f;
                     People[j].GetComponent<Person>().Infected = Random.Range(0.0f, 1.0f) < infectionChance;
@@ -326,13 +329,14 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGraph()
     {
-        //Debug.Log("Number Infected: " + NumInfected);
-        int iVal = (int)((NumInfected / (float)People.Count) * 100);
+        Debug.Log("Number Infected: " + NumInfected);
+        Debug.Log("Number Susceptible: " + NumHealthy + NumInfected);
+        int iVal = (int)((NumInfected / (float)initalPeople) * 100);
         iValues.Add(iVal);
-        int sVal = (int)((NumInfected / (float)People.Count) * 100);
+        int sVal = (int)(((NumHealthy + NumInfected) / (float)initalPeople) * 100);
         sValues.Add(sVal);
 
-        //Debug.Log(iVal + "," + sVal);
+        Debug.Log(iVal + "," + sVal);
         if (iValues.Count > 30)
         {
             iValues.RemoveAt(0);
@@ -368,5 +372,7 @@ public class GameManager : MonoBehaviour
             infectionTimer = 0;
             CalculateInfections();
         }
-	}
+
+        UpdateGraph();
+    }
 }

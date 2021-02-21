@@ -5736,6 +5736,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 404ec42735b3a4a4bbd5ffb666428a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iValues: 
+  sValues: 
 --- !u!4 &716837089
 Transform:
   m_ObjectHideFlags: 0
@@ -9841,8 +9843,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1900555485}
   m_HandleRect: {fileID: 1900555484}
   m_Direction: 2
-  m_Value: 1.0000005
-  m_Size: 0.7039132
+  m_Value: 1.0000002
+  m_Size: 0.7039131
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11053,7 +11055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numHouses: 10
-  maxHouseDensity: 0
+  maxHouseDensity: 4
   initallyInfected: 0.05
   socialDistance: 3
   populationSocialDistance: 0.25
