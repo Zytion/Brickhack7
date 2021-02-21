@@ -122,6 +122,8 @@ public class Person : MonoBehaviour
                     //DEAD
                     gameManager.NumInfected--;
                     gameManager.NumDead++;
+                    if (Recovered)
+                        gameManager.NumRecovered--;
                     gameManager.KillPerson(gameObject);
                 }
                 else
