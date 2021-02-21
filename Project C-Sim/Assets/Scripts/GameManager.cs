@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     private int initalPeople;
     private SimulationValues simValues;
     private bool isRunning;
+    public bool IsRunning => isRunning;
     private GameObject actors;
     private Window_Graph healthyGraph;
 	private Window_Graph infectedGraph;
@@ -431,7 +432,7 @@ public class GameManager : MonoBehaviour
             StartButtonPress();
         }
 
-        if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.B))
+        if(Input.GetKey(KeyCode.W) && Input.GetKeyDown(KeyCode.B))
         {
             Instantiate(Resources.Load<GameObject>("WhaleB"), Vector3.zero, Quaternion.identity);
         }
