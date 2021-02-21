@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
 	private Window_Graph infectedGraph;
 	private List<TextMeshProUGUI> GraphTexts;
 	private int highest;
+	private float graphTimer;
 
 	[SerializeField] private List<int> iValues;
     [SerializeField] private List<int> sValues;
@@ -75,6 +76,8 @@ public class GameManager : MonoBehaviour
 		infectedGraph = GameObject.Find("infectedGraph").GetComponent<Window_Graph>();
 		StartResetButton = GameObject.Find("Start_Reset_Button");
 
+		graphTimer = 0;
+		highest = 0;
 		GraphTexts = new List<TextMeshProUGUI>();
 		GraphTexts.AddRange(GameObject.Find("GraphData").GetComponentsInChildren<TextMeshProUGUI>());
 		GraphTexts.AddRange(GameObject.Find("GraphStats").GetComponentsInChildren<TextMeshProUGUI>());
@@ -403,8 +406,14 @@ public class GameManager : MonoBehaviour
             healthyGraph.UpdateValue(i, sValues[i]);
             infectedGraph.UpdateValue(i, iValues[i]);
         }
-		GraphTexts[0].text = string.Format("{0}% removed", 100 - iVal - sVal);	//Removed
-		GraphTexts[1].text = string.Format("{0}% susceptible", sVal);  //Susceptible
+
+		int sus = (int)(((NumHealthy) / (float)initalPeople) * 100);
+
+		if (iVal > highest)
+			highest = iVal;
+
+		GraphTexts[0].text = string.Format("{0}% removed", (100 - (iVal + sus)));	//Removed
+		GraphTexts[1].text = string.Format("{0}% susceptible", sus);  //Susceptible
 		GraphTexts[2].text = string.Format("{0}% infected", iVal);  //Infected
 		GraphTexts[4].text = string.Format("Highest infection amount: {0}%", highest);  //Highest
 		GraphTexts[5].text = string.Format("Dead: {0}", NumDead);  //Estimated Dead
@@ -434,7 +443,13 @@ public class GameManager : MonoBehaviour
         {
             infectionTimer = 0;
             CalculateInfections();
+		}
+		graphTimer += Time.deltaTime;
+		if (graphTimer > 2)
+		{
+			graphTimer = 0;
 			UpdateGraph();
 		}
+
 	}
 }
