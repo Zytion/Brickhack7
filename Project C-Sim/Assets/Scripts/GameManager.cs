@@ -29,11 +29,11 @@ public class GameManager : MonoBehaviour
     {
         get { return initalPeople - NumInfected - NumDead - NumRecovered; }
     }
+    public List<Vector2> HospitalPositions { get; set; }
 
 
     private List<Vector2> poiPositions;
     private List<Vector2> housePositions;
-    private List<Vector2> hospitalPositions;
     private GameObject housePrefab;
     private GameObject hospitalPrefab;
     private List<GameObject> poiPrefabs;

@@ -94,6 +94,7 @@ public class Person : MonoBehaviour
     private Rigidbody2D rb;
     private float recoverTimer;
     private float recoverTime;
+    private bool goToHosptial;
     
     // Start is called before the first frame update
     public void Start()
@@ -168,6 +169,11 @@ public class Person : MonoBehaviour
             if (inHouse)
             {
                 destination = gameManager.GetRandomBuilding();
+                // Is the person going to the hospital?
+                if (gameManager.HospitalPositions.Contains(destination))
+                {
+                    goToHosptial = true;
+                }
             }
             // Move person back to home.
             else
@@ -185,6 +191,10 @@ public class Person : MonoBehaviour
         {
             Moving = false;
             rb.velocity = Vector3.zero;
+            if (goToHosptial)
+            {
+                //home.GetComponent<House>().
+            }
             return;
         }
 
