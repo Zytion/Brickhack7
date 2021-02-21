@@ -11,6 +11,8 @@ public class House : Building
     public GameManager gameManager { get; set; }
     public int MaxHouseCapacity { get; set;}
 
+    public GameObject Actors { get; set; }
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -33,6 +35,7 @@ public class House : Building
             personScript.gameManager = this.gameManager;
             people.Add(newPerson);
             gameManager.People.Add(newPerson);
+            newPerson.transform.parent = Actors.transform;
         }
     }
 }
