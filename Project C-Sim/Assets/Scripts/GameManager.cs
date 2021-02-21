@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
         People = new List<GameObject>();
         poiPositions = new List<Vector2>();
         housePositions = new List<Vector2>();
-        hospitalPositions = new List<Vector2>();
+        HospitalPositions = new List<Vector2>();
         isRunning = true;
         iValues = new List<int>();
         sValues = new List<int>();
@@ -264,7 +264,7 @@ public class GameManager : MonoBehaviour
                 case BuildingType.Hospital:
                     {
                         poiPositions.Add(buildingPosition);
-                        hospitalPositions.Add(buildingPosition);
+                        HospitalPositions.Add(buildingPosition);
                         break;
                     }
             }

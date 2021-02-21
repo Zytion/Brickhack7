@@ -194,10 +194,11 @@ public class Person : MonoBehaviour
         {
             Moving = false;
             rb.velocity = Vector3.zero;
-            if (goToHosptial)
+            if (goToHosptial && infected)
             {
-                //home.GetComponent<House>().
+                home.GetComponent<House>().QuarantineResidents();
             }
+            goToHosptial = false;
             return;
         }
 
