@@ -214,8 +214,7 @@ public class GameManager : MonoBehaviour
         SeperationDistance = simValues.socialDistance / 5.0f;
         NumberOfPointsOfInterest = (int)simValues.placesOfInterest;
         MaxHouseCapacity = simValues.maxHouseDensity;
-        //NumberOfHospitals = simValues.numberOfHospitals;
-        NumberOfHospitals = 1;
+        NumberOfHospitals = simValues.numOfHospitals;
         infectionRatio = simValues.initallyInfected;
         maskRatio = simValues.maskWearingPercentage;
         socialDistancingRatio = simValues.populationSocialDistance;
