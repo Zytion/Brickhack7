@@ -344,7 +344,8 @@ public class GameManager : MonoBehaviour
                 {
                     if (i == j
                         || People[j].GetComponent<Person>().Infected
-                        || Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position) > InfectionRadius * InfectionRadius)  continue;
+                        || Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position) > InfectionRadius * InfectionRadius
+                        || (People[i].GetComponent<Person>().InHouse && People[i].GetComponent<Person>().home != People[j].GetComponent<Person>().home))  continue;
                     // Infect this person
                     //Get infection rate based on distance
                     float maskReduction = 0.4242f;
