@@ -9,6 +9,7 @@ public class Person : MonoBehaviour
 {
     public int Age { get; set; }
     public Sex Sex { get; set; }
+    public bool HasMask { get; set; }
     private bool infected;
     public bool Infected
     {
@@ -43,6 +44,7 @@ public class Person : MonoBehaviour
     public GameManager gameManager { get; set; }
     public bool Moving { get; set; }
     public bool SocialDistancing { get; set; }
+    public bool CloseToDest => closeToDest;
 
     private float moveTimer;
     private float coolDown;
@@ -64,7 +66,7 @@ public class Person : MonoBehaviour
         inHouse = true;
         rb = GetComponent<Rigidbody2D>();
         speed = 5f;
-        closeToDest = false;
+        closeToDest = true;
         destinationRadius = 1f;
         SocialDistancing = true;
         infected = false;
@@ -75,6 +77,7 @@ public class Person : MonoBehaviour
     {
         this.Sex = Random.Range(0, 2) == 0 ? Sex.Male : Sex.Female;
         this.Age = Random.Range(1, 90);
+        HasMask = true;
     }
     
     // Update is called once per frame
@@ -97,7 +100,7 @@ public class Person : MonoBehaviour
             if(recoverTimer > recoverTime)
             {
                 //Check to see if dead
-                if(Random.Range(0,1.0f) < 0.05f)
+                if(Random.Range(0,1.0f) < GetDeathChance())
                 {
                     //DEAD
                     gameManager.KillPerson(gameObject);
@@ -177,5 +180,35 @@ public class Person : MonoBehaviour
     {
         Vector3 desiredVelocity = target - (Vector2)transform.position;
         return Steer(desiredVelocity);
+    }
+
+    public float GetDeathChance()
+    {
+        float deathChance = 0;
+        if (Age <= 9)
+            deathChance = 0.1f / 100.0f;
+        else if (Age <= 19)
+            deathChance = 0.1f / 100.0f;
+        else if (Age <= 29)
+            deathChance = 0.1f / 100.0f;
+        else if (Age <= 39)
+            deathChance = 0.4f / 100.0f;
+        else if (Age <= 49)
+            deathChance = 1.0f / 100.0f;
+        else if (Age <= 59)
+            deathChance = 2.4f / 100.0f;
+        else if (Age <= 69)
+            deathChance = 6.7f / 100.0f;
+        else if (Age <= 79)
+            deathChance = 16.6f / 100.0f;
+        else
+            deathChance = 28.7f / 100.0f;
+
+        if (Sex == Sex.Male)
+            deathChance *= 1.125f;
+        else
+            deathChance *= 0.9f;
+
+        return deathChance;
     }
 }
