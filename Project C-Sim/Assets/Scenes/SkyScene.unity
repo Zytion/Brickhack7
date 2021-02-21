@@ -945,7 +945,6 @@ RectTransform:
   - {fileID: 1628578772}
   - {fileID: 514656646}
   - {fileID: 1264802402}
-  - {fileID: 579305779}
   m_Father: {fileID: 205654736}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1477,6 +1476,7 @@ RectTransform:
   - {fileID: 924569241}
   - {fileID: 136185901}
   - {fileID: 1252861875}
+  - {fileID: 579305779}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4115,13 +4115,13 @@ RectTransform:
   - {fileID: 1861692862}
   - {fileID: 1516154105}
   - {fileID: 2046810148}
-  m_Father: {fileID: 136185901}
-  m_RootOrder: 3
+  m_Father: {fileID: 205654736}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 522.5, y: 0}
-  m_SizeDelta: {x: 1045, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &579305780
 MonoBehaviour:
@@ -8125,7 +8125,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1900555484}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.6066056
+  m_Size: 0.6067641
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12276,7 +12276,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Places of Intrest: '
+  m_text: 'Places of Interest: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c5c8f80cb39010d42a6594b1ca4d6a61, type: 2}
   m_sharedMaterial: {fileID: 7032369014670218320, guid: c5c8f80cb39010d42a6594b1ca4d6a61,
@@ -12346,7 +12346,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1883338944}
-    characterCount: 19
+    characterCount: 20
     spriteCount: 0
     spaceCount: 3
     wordCount: 3
