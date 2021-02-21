@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public enum BuildingType
 {
@@ -272,6 +273,19 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void AudioToggle (Toggle toggle)
+    {
+        if(toggle.isOn)
+        {
+            toggle.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Unmute";
+            this.GetComponent<AudioSource>().volume = 0;
+        }
+        else
+        {
+            toggle.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Mute";
+            this.GetComponent<AudioSource>().volume = 1;
+        }
+    }
     /// <summary>
     /// Gets a random point of interest prefab
     /// </summary>
