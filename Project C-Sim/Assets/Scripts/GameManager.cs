@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     private int initalPeople;
     private SimulationValues simValues;
     private bool isRunning;
+    public bool IsRunning => isRunning;
     private GameObject actors;
     private Window_Graph healthyGraph;
 	private Window_Graph infectedGraph;
@@ -354,7 +355,8 @@ public class GameManager : MonoBehaviour
                 {
                     if (i == j
                         || People[j].GetComponent<Person>().Infected
-                        || Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position) > InfectionRadius * InfectionRadius)  continue;
+                        || Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position) > InfectionRadius * InfectionRadius
+                        || (People[i].GetComponent<Person>().InHouse && People[i].GetComponent<Person>().home != People[j].GetComponent<Person>().home))  continue;
                     // Infect this person
                     //Get infection rate based on distance
                     float maskReduction = 0.4242f;
@@ -367,7 +369,7 @@ public class GameManager : MonoBehaviour
                     else
                         distance = Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position);
 
-                    float infectionChance = (1 / (distance + 1 / 3)) / 200;
+                    float infectionChance = (1.0f / ((distance / 2.0f) + (1.0f / 6.0f))) / 200.0f;
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= People[j].GetComponent<Person>().Recovered ? 0.1f : 1.0f;
                     infectionChance *= People[i].GetComponent<Person>().Quarantining && People[i].GetComponent<Person>().InHouse ? 0.1f : 1.0f;
@@ -430,7 +432,7 @@ public class GameManager : MonoBehaviour
             StartButtonPress();
         }
 
-        if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.B))
+        if(Input.GetKey(KeyCode.W) && Input.GetKeyDown(KeyCode.B))
         {
             Instantiate(Resources.Load<GameObject>("WhaleB"), Vector3.zero, Quaternion.identity);
         }

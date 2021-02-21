@@ -7,6 +7,7 @@ public class House : Building
     public int NumberOfResidents { get; set; }
     public GameObject personPrefab { get; set; }
     public List<GameObject> people { get; set; }
+    [SerializeField]
     public bool ResidentsInQuarantine { get; set; }
 
     public GameManager gameManager { get; set; }
@@ -53,6 +54,7 @@ public class House : Building
     {
         if(ResidentsInQuarantine)
         {
+            GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
             if(CheckQuarantineFinish())
             {
                 //End quarantine
@@ -62,6 +64,10 @@ public class House : Building
                     person.GetComponent<Person>().Quarantining = false;
                 }
             }
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().color = new Color(1, 0.7005286f, 0.3349057f, 1);
         }
     }
 

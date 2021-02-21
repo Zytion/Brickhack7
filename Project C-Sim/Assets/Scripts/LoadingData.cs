@@ -76,8 +76,6 @@ public class LoadingData : MonoBehaviour
 			+"\n# Hospitalized: {3}\nTotal Dead: {4}\nIncrease in Death: {7}",
 			stateInfo.totalTestResults, stateInfo.positive, stateInfo.positiveIncrease, stateInfo.hospitalized, stateInfo.death,
 			stateInfo.lastModified, stateInfo.totalTestResultsIncrease, stateInfo.deathIncrease);
-
-
 	}
 
 	private Info LoadData(string url)

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class WhaleScript : MonoBehaviour
 {
-    GameObject target;
-    GameManager gm;
+    public GameObject target;
+    public GameManager gm;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,12 +17,21 @@ public class WhaleScript : MonoBehaviour
     {
         if(target == null)
         {
-            if(gm.People.Count > 0)
-            target = gm.People[Random.Range(0, gm.People.Count)];
+            gameObject.transform.GetChild(0).transform.position = Vector2.Lerp(transform.GetChild(0).transform.position, gameObject.transform.position, 0.1f);
+            if (gm.IsRunning)
+            {
+                if(gm.People.Count > 0)
+                target = gm.People[Random.Range(0, gm.People.Count)].gameObject;
+            }
         }
         else
         {
-            this.GetComponent<Rigidbody2D>().AddForce(target.transform.position - this.transform.position * 1);
+            gameObject.transform.GetChild(0).transform.position = new Vector3(this.transform.position.x, this.transform.position.y + Mathf.Abs(Mathf.Sin((Time.time * 6f + 1525f)) * 0.4f), this.transform.position.z);
+            gameObject.transform.Translate((target.transform.position - this.transform.position).normalized * 2f * Time.deltaTime);
+            if(Vector2.Distance(this.transform.position, target.transform.position) < 0.2f)
+            {
+                gm.KillPerson(target);
+            }
         }
     }
 }
