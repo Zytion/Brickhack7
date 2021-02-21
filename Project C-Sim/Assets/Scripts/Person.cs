@@ -15,7 +15,12 @@ public class Person : MonoBehaviour
         get { return hasMask; }
         set
         {
-            this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("MaskPerson");
+            if (value)
+            {
+                infectionSound = Resources.Load<AudioClip>("Drip");
+                this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("MaskPerson");
+            }
+            hasMask = value;
         }
     }
     private bool infected;
@@ -80,8 +85,9 @@ public class Person : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         speed = 5f;
         closeToDest = true;
+        SocialDistancing = false;
+        HasMask = false;
         destinationRadius = gameManager.SeperationDistance;
-        SocialDistancing = true;
         infected = false;
         recoverTime = 60.0f;
     }
@@ -90,7 +96,6 @@ public class Person : MonoBehaviour
     {
         this.Sex = Random.Range(0, 2) == 0 ? Sex.Male : Sex.Female;
         this.Age = Random.Range(1, 90);
-        HasMask = true;
     }
     
     // Update is called once per frame
