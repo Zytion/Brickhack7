@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
-        
+
         // keep track of the indicies of people initially infected.
         List<int> indiciesUsed = new List<int>();
         int count = 0;
@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
         indiciesUsed.Clear();
         count = 0;
         int numberWearingMasks = (int)(People.Count * maskRatio);
-
+        Debug.Log(maskRatio + ": " + numberWearingMasks);
         // Infect numberInfected number of people.
         while (count < numberWearingMasks)
         {

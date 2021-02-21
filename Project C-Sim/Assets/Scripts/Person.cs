@@ -121,8 +121,9 @@ public class Person : MonoBehaviour
                 {
                     //DEAD
                     gameManager.KillPerson(gameObject);
+                    gameManager.NumDead++;
                 }
-
+                gameManager.NumInfected--;
                 Infected = false;
                 Recovered = true;
             }
