@@ -54,7 +54,7 @@ public class House : Building
     {
         if(ResidentsInQuarantine)
         {
-            GetComponent<SpriteRenderer>().color = new Color(0, 0.6f, 0);
+            GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
             if(CheckQuarantineFinish())
             {
                 //End quarantine

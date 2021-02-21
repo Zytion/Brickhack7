@@ -27,7 +27,7 @@ public class WhaleScript : MonoBehaviour
         else
         {
             gameObject.transform.GetChild(0).transform.position = new Vector3(this.transform.position.x, this.transform.position.y + Mathf.Abs(Mathf.Sin((Time.time * 6f + 1525f)) * 0.4f), this.transform.position.z);
-            gameObject.transform.position = Vector3.Lerp(target.transform.position, this.transform.position, 0.988f);
+            gameObject.transform.Translate((target.transform.position - this.transform.position).normalized * 2f * Time.deltaTime);
             if(Vector2.Distance(this.transform.position, target.transform.position) < 0.2f)
             {
                 gm.KillPerson(target);
