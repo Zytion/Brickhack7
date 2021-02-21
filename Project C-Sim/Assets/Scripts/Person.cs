@@ -17,7 +17,6 @@ public class Person : MonoBehaviour
         {
             if (value)
             {
-                infectionSound = Resources.Load<AudioClip>("Drip");
                 this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("MaskPerson");
             }
             hasMask = value;
