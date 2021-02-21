@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,10 +14,12 @@ public class GameManager : MonoBehaviour
     public int NumberOfHouses { get; set; }
     public int NumberOfPointsOfInterest { get; set; }
     public List<GameObject> People { get; set; }
+    public int MaxHouseCapacity { get; set; }
     public float SeperationDistance { get; set; }
     public float InfectionRadius { get; set; }
     public int NumInfected { get; set; }
     public int NumDead { get; set; }
+    public GameObject StartResetButton { get; set; }
     private int numHealthy;
     public int NumHealthy
     {
@@ -35,33 +38,37 @@ public class GameManager : MonoBehaviour
     private float infectionCoolDown;
     private float infectionRatio;
     private int initalPeople;
+    private SimulationValues simValues;
+    private bool isRunning;
 
     /// <summary>
     /// 
     /// </summary>
     public void Start()
     {
-        NumberOfHouses = 10;
-        SeperationDistance = 1f;
-        NumberOfPointsOfInterest = 3;
+        InfectionRadius = 1.5f;
         scaleFactor = 1f;
         buildingHalfWidth = scaleFactor / 2.0f;
         sepForceMult = 20.0f;
-        Debug.Log(buildingHalfWidth);
-        InitializePrefabs();
-        People = new List<GameObject>();
-        poiPositions = new List<Vector2>();
-        housePositions = new List<Vector2>();
+        isRunning = false;
+        simValues = GameObject.Find("SimValues").GetComponent<SimulationValues>();
         GameObject simulation = GameObject.Find("Simulation");
+        StartResetButton = GameObject.Find("Start_Reset_Button");
+        StartResetButton.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            if (StartResetButton.transform.GetChild(0).GetComponent<Text>().text == "Start")
+            {
+                StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Reset";
+                StartCoroutine(BeginSimulation());
+            }
+            else
+            {
+                StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Start";
+            }
+        });
         SimulationExtents = simulation.GetComponent<BoxCollider2D>().bounds.extents;
         SimulationPosition = simulation.transform.position;
-        infectionTimer = 0;
-        infectionCoolDown = 1 / 6f;
-        infectionRatio = 1f / 20f;
-        InfectionRadius = 1.5f;
-        // Start the simulation
-        // TODO: move to a button click event.
-        StartCoroutine(BeginSimulation());
+        InitializePrefabs();
     }
 
     /// <summary>
@@ -85,6 +92,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     IEnumerator BeginSimulation()
     {
+        // Initialize sim values.
+        People = new List<GameObject>();
+        poiPositions = new List<Vector2>();
+        housePositions = new List<Vector2>();
+        isRunning = true;
+
+        ReadSimValues();
+
         // Generate a random number of houses.
         SpawnRandomBuildings(NumberOfHouses, false, housePrefab);
         // Generate a random number of points of interest.
@@ -118,7 +133,21 @@ public class GameManager : MonoBehaviour
         NumInfected = numberInfected;
         initalPeople = People.Count;
     }
-
+    public void ReadSimValues()
+    {
+        NumberOfHouses = simValues.numHouses;
+        SeperationDistance = simValues.socialDistance / 5.0f;
+        NumberOfPointsOfInterest = (int)simValues.placesOfInterest;
+        MaxHouseCapacity = simValues.maxHouseDensity;
+        infectionRatio = simValues.initallyInfected;
+        Debug.Log("NumberOfHouses " + NumberOfHouses);
+        Debug.Log("SeperationDistance " + SeperationDistance);
+        Debug.Log("NumberOfPointsOfInterest " + NumberOfPointsOfInterest);
+        Debug.Log("MaxHouseCapacity " + MaxHouseCapacity);
+        Debug.Log("initallyInfected " + infectionRatio);
+        infectionTimer = 0;
+        infectionCoolDown = 1 / 6f;
+    }
     /// <summary>
     /// 
     /// </summary>
@@ -145,6 +174,7 @@ public class GameManager : MonoBehaviour
             if (!isPOI)
             {
                 house.GetComponent<House>().gameManager = this;
+                house.GetComponent<House>().MaxHouseCapacity = MaxHouseCapacity;
                 housePositions.Add(buildingPosition);
             }
             else
@@ -226,6 +256,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Update()
     {
+        if (!isRunning) return;
+
         infectionTimer += Time.deltaTime;
         // Time to check for infections again.
         if (infectionTimer > infectionCoolDown)

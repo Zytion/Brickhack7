@@ -7,7 +7,7 @@ public class SimulationValues : MonoBehaviour
 {
     public int numHouses;
     public void NumHouses (Slider s) { numHouses = (int)s.value; }
-    public float maxHouseDensity;
+    public int maxHouseDensity;
     public void MaxHouseDensity(Slider s) { maxHouseDensity = (int)s.value; }
     public float initallyInfected;
     public void InitallyInfected(Slider s) { initallyInfected = s.value; }
@@ -17,6 +17,6 @@ public class SimulationValues : MonoBehaviour
     public void PopulationSocialDistance(Slider s) { populationSocialDistance = s.value; }
     public float maskWearingPercentage;
     public void MaskWearingPercentage(Slider s) { maskWearingPercentage = s.value; }
-    public float placesOfIntrest;
-    public void PlacesOfIntrest(Slider s) { placesOfIntrest = (int)s.value; }
+    public float placesOfInterest;
+    public void PlacesOfInterest(Slider s) { placesOfInterest = (int)s.value; }
 }

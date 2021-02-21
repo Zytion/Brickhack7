@@ -125,13 +125,8 @@ public class Person : MonoBehaviour
             {
                 destination = home.transform.position;
             }
-            Debug.Log(destination);
             inHouse = !inHouse;
         }
-
-
-
-        //
     }
 
     public void Move()

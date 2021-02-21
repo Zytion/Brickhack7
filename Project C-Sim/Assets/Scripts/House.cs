@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using UnityEngine;
 
 public class House : Building
@@ -8,11 +9,12 @@ public class House : Building
     public List<GameObject> people { get; set; }
 
     public GameManager gameManager { get; set; }
+    public int MaxHouseCapacity { get; set;}
 
     // Start is called before the first frame update
     public void Start()
     {
-        NumberOfResidents = Random.Range(1, 5);
+        NumberOfResidents = Random.Range(1, MaxHouseCapacity + 1);
         personPrefab = Resources.Load<GameObject>("Person");
         personPrefab.transform.localScale = new Vector2(.5f, .5f);
         people = new List<GameObject>();
