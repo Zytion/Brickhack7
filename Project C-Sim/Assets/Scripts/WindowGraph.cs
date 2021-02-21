@@ -20,6 +20,12 @@ using TMPro;
 public class WindowGraph : MonoBehaviour
 {
 
+
+	private interface IGraphVisual
+	{
+		List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth, string tooltipText);
+	}
+
 	[SerializeField] private Sprite circleSprite;
 	//[SerializeField] private Sprite upSprite;
 	//[SerializeField] private Sprite downSprite;
