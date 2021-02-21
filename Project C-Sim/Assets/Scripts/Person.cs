@@ -35,6 +35,7 @@ public class Person : MonoBehaviour
                 gameManager.GetComponent<AudioSource>().Play();
                 GameObject par = (GameObject)Instantiate(Resources.Load("InfectedParticle"), this.transform.position, Quaternion.identity);
                 par.transform.SetParent(this.transform);
+                recoverTime = Random.Range(10f, 45f);
                 GetComponentInChildren<SpriteRenderer>().color = Color.red;
             }
             infected = value;
@@ -88,7 +89,6 @@ public class Person : MonoBehaviour
         HasMask = false;
         destinationRadius = gameManager.SeperationDistance;
         infected = false;
-        recoverTime = 60.0f;
     }
 
     public void AssignRandomAttributes()
