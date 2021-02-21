@@ -42,8 +42,8 @@ public class GameManager : MonoBehaviour
     private Window_Graph healthyGraph;
 	private Window_Graph infectedGraph;
 
-	private List<int> iValues;
-    private List<int> sValues;
+	[SerializeField] private List<int> iValues;
+    [SerializeField] private List<int> sValues;
 
     /// <summary>
     /// 
@@ -339,8 +339,8 @@ public class GameManager : MonoBehaviour
             CalculateInfections();
         }
 
-        iValues.Add((int)(((float)NumInfected / People.Count) * 100));
-        sValues.Add((int)(((float)NumHealthy / People.Count) * 100)); 
+        iValues.Add((int)((NumInfected / (float)People.Count) * 100));
+        sValues.Add((int)((NumHealthy / (float)People.Count) * 100)); 
 
         if(iValues.Count > 30)
         {
