@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
         housePositions = new List<Vector2>();
         isRunning = true;
 
+        // Read values from the simulation sliders.
         ReadSimValues();
 
         // Generate a random number of houses.
@@ -105,20 +106,22 @@ public class GameManager : MonoBehaviour
         // Generate a random number of points of interest.
         SpawnRandomBuildings(NumberOfPointsOfInterest, true, null);
 
-        int numberInfected = (int)(People.Count * infectionRatio);
-        if (numberInfected == 0)
-        {
-            numberInfected++;
-        }
-        Debug.Log(numberInfected + " Caden is literally dog water");
-        List<int> indiciesUsed = new List<int>();
-        int count = 0;
         // Wait until there are people in the list.
         while(People.Count == 0)
         {
             yield return new WaitForEndOfFrame();
         }
-        Debug.Log(People.Count);
+        
+        // keep track of the indicies of people initially infected.
+        List<int> indiciesUsed = new List<int>();
+        int count = 0;
+        int numberInfected = (int)(People.Count * infectionRatio);
+        // Make sure there is at least one initial infection.
+        if (numberInfected == 0)
+        {
+            numberInfected++;
+        }
+        // Infect numberInfected number of people.
         while (count < numberInfected)
         {
             int randomIndex = Random.Range(0, People.Count);
@@ -128,8 +131,8 @@ public class GameManager : MonoBehaviour
             }
             People[randomIndex].GetComponent<Person>().Infected = true;
             count++;
-            Debug.Log(count);
         }
+
         NumInfected = numberInfected;
         initalPeople = People.Count;
     }
