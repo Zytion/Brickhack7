@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SkyScene.unity
+    guid: f5461429d59a54b4f8a6f677c55cc415
   m_configObjects: {}

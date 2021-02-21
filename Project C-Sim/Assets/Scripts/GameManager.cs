@@ -329,13 +329,13 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGraph()
     {
-        //Debug.Log("Number Infected: " + NumInfected);
+        Debug.Log("Number Infected: " + NumInfected);
         int iVal = (int)((NumInfected / (float)People.Count) * 100);
         iValues.Add(iVal);
-        int sVal = (int)((NumInfected / (float)People.Count) * 100);
+        int sVal = (int)(((NumHealthy + NumInfected) / (float)People.Count) * 100);
         sValues.Add(sVal);
 
-        //Debug.Log(iVal + "," + sVal);
+        Debug.Log(iVal + "," + sVal);
         if (iValues.Count > 30)
         {
             iValues.RemoveAt(0);
@@ -371,5 +371,7 @@ public class GameManager : MonoBehaviour
             infectionTimer = 0;
             CalculateInfections();
         }
-	}
+
+        UpdateGraph();
+    }
 }
