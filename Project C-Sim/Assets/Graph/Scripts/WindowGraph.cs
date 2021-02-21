@@ -71,28 +71,28 @@ public class WindowGraph : MonoBehaviour {
 		float graphWidth = graphContainer.sizeDelta.x;
 		float yMaximum = 100f;
 
-        GameObject lastCircleGameObject = null;
+        GameObject lastDotGameObject = null;
         for (int i = 0; i < iValues.Count; i++) {
             float xPosition =  graphWidth / (iValues.Count - 1) * i;
             float yPosition = (iValues[i] / yMaximum) * graphHeight;
 			GameObject circleGameObject = CreateDot(new Vector2(xPosition, yPosition));
-			if (lastCircleGameObject != null) {
-                CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition, Color.red);
+			if (lastDotGameObject != null) {
+                CreateDotConnection(lastDotGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition, Color.red);
             }
-            lastCircleGameObject = circleGameObject;
+            lastDotGameObject = circleGameObject;
 			dots.Add(circleGameObject);
 		}
-		lastCircleGameObject = null;
+		lastDotGameObject = null;
 		for (int i = 0; i < sValues.Count; i++)
 		{
 			float xPosition = graphWidth / (sValues.Count - 1) * i;
 			float yPosition = ((iValues[i] + sValues[i]) / yMaximum) * graphHeight;
 			GameObject circleGameObject = CreateDot(new Vector2(xPosition, yPosition));
-			if (lastCircleGameObject != null)
+			if (lastDotGameObject != null)
 			{
-				CreateDotConnection(lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition, Color.blue);
+				CreateDotConnection(lastDotGameObject.GetComponent<RectTransform>().anchoredPosition, circleGameObject.GetComponent<RectTransform>().anchoredPosition, Color.blue);
 			}
-			lastCircleGameObject = circleGameObject;
+			lastDotGameObject = circleGameObject;
 			dots.Add(circleGameObject);
 		}
 	}
@@ -110,7 +110,6 @@ public class WindowGraph : MonoBehaviour {
         rectTransform.anchoredPosition = dotPositionA + dir * distance * .5f;
         rectTransform.localEulerAngles = new Vector3(0, 0, UtilsClass.GetAngleFromVectorFloat(dir));
 		dots.Add(gameObject);
-
 	}
 
 }
