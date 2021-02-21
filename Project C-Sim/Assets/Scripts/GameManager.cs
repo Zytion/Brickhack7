@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +14,15 @@ public class GameManager : MonoBehaviour
     public int NumberOfPointsOfInterest { get; set; }
     public List<GameObject> People { get; set; }
     public float SeperationDistance { get; set; }
+    public float InfectionRadius { get; set; }
+    public int NumInfected { get; set; }
+    public int NumDead { get; set; }
+    private int numHealthy;
+    public int NumHealthy
+    {
+        get { return initalPeople - NumInfected - NumDead; }
+    }
+
 
     private List<Vector2> poiPositions;
     private List<Vector2> housePositions;
@@ -19,6 +31,10 @@ public class GameManager : MonoBehaviour
     private float scaleFactor;
     private float buildingHalfWidth;
     private float sepForceMult;
+    private float infectionTimer;
+    private float infectionCoolDown;
+    private float infectionRatio;
+    private int initalPeople;
 
     /// <summary>
     /// 
@@ -39,9 +55,13 @@ public class GameManager : MonoBehaviour
         GameObject simulation = GameObject.Find("Simulation");
         SimulationExtents = simulation.GetComponent<BoxCollider2D>().bounds.extents;
         SimulationPosition = simulation.transform.position;
+        infectionTimer = 0;
+        infectionCoolDown = 1 / 6f;
+        infectionRatio = 1f / 20f;
+        InfectionRadius = 1.5f;
         // Start the simulation
         // TODO: move to a button click event.
-        BeginSimulation();
+        StartCoroutine(BeginSimulation());
     }
 
     /// <summary>
@@ -63,12 +83,40 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Start the simulation
     /// </summary>
-    public void BeginSimulation()
+    IEnumerator BeginSimulation()
     {
         // Generate a random number of houses.
         SpawnRandomBuildings(NumberOfHouses, false, housePrefab);
         // Generate a random number of points of interest.
         SpawnRandomBuildings(NumberOfPointsOfInterest, true, null);
+
+        int numberInfected = (int)(People.Count * infectionRatio);
+        if (numberInfected == 0)
+        {
+            numberInfected++;
+        }
+        Debug.Log(numberInfected + " Caden is literally dog water");
+        List<int> indiciesUsed = new List<int>();
+        int count = 0;
+        // Wait until there are people in the list.
+        while(People.Count == 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.Log(People.Count);
+        while (count < numberInfected)
+        {
+            int randomIndex = Random.Range(0, People.Count);
+            while (indiciesUsed.Contains(randomIndex))
+            {
+                randomIndex = ++randomIndex % People.Count;
+            }
+            People[randomIndex].GetComponent<Person>().Infected = true;
+            count++;
+            Debug.Log(count);
+        }
+        NumInfected = numberInfected;
+        initalPeople = People.Count;
     }
 
     /// <summary>
@@ -143,12 +191,47 @@ public class GameManager : MonoBehaviour
         return netForce;
     }
 
+    public void KillPerson(GameObject person)
+    {
+        People.Remove(person);
+        //Instatiate skull and cross bones
+        NumInfected--;
+        NumDead++;
+        Destroy(person);
+
+    }
+
+    public void CalculateInfections()
+    {
+        // Iterate through each person.
+        for(int i = 0; i < People.Count -1; i++)
+        {
+            // If this person is infected, look at everyone else.
+            if (People[i].GetComponent<Person>().Infected)
+            {
+                for(int j = 0; j < People.Count; j++)
+                {
+                    if (i == j
+                        || Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position) > InfectionRadius * InfectionRadius)  continue;
+                    // Infect this person
+                    People[j].GetComponent<Person>().Infected = Random.Range(0.0f, 1.0f) < .01f;
+                    NumInfected++;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// 
     /// </summary>
     public void Update()
     {
-        
+        infectionTimer += Time.deltaTime;
+        // Time to check for infections again.
+        if (infectionTimer > infectionCoolDown)
+        {
+            infectionTimer = 0;
+            CalculateInfections();
+        }
     }
 }

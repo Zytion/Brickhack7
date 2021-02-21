@@ -9,6 +9,35 @@ public class Person : MonoBehaviour
 {
     public int Age { get; set; }
     public Sex Sex { get; set; }
+    private bool infected;
+    public bool Infected
+    {
+        get { return infected; }
+        set
+        {
+            if (value)
+            {
+                //Change color
+                GetComponentInChildren<SpriteRenderer>().color = Color.red;
+            }
+            infected = value;
+        }
+    }
+
+    private bool recovered;
+    public bool Recovered
+    {
+        get { return recovered; }
+        set
+        {
+            if (value)
+            {
+                //Change color
+                GetComponentInChildren<SpriteRenderer>().color = Color.yellow;
+            }
+            recovered = value;
+        }
+    }
 
     public GameObject home { get; set; }
     public GameManager gameManager { get; set; }
@@ -23,6 +52,8 @@ public class Person : MonoBehaviour
     private Vector2 destination;
     private float speed;
     private Rigidbody2D rb;
+    private float recoverTimer;
+    private float recoverTime;
     
     // Start is called before the first frame update
     public void Start()
@@ -36,6 +67,8 @@ public class Person : MonoBehaviour
         closeToDest = false;
         destinationRadius = 1f;
         SocialDistancing = true;
+        infected = false;
+        recoverTime = 60.0f;
     }
 
     public void AssignRandomAttributes()
@@ -47,6 +80,7 @@ public class Person : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
+        // Don't move.
         if (!Moving)
         {
             moveTimer += Time.deltaTime;
@@ -55,6 +89,23 @@ public class Person : MonoBehaviour
         else
         {
             Move();
+        }
+
+        if(Infected)
+        {
+            recoverTimer += Time.deltaTime;
+            if(recoverTimer > recoverTime)
+            {
+                //Check to see if dead
+                if(Random.Range(0,1.0f) < 0.05f)
+                {
+                    //DEAD
+                    gameManager.KillPerson(gameObject);
+                }
+
+                Infected = false;
+                Recovered = true;
+            }
         }
 
 
@@ -77,6 +128,10 @@ public class Person : MonoBehaviour
             Debug.Log(destination);
             inHouse = !inHouse;
         }
+
+
+
+        //
     }
 
     public void Move()
