@@ -19,7 +19,6 @@ public class SimulationValues : MonoBehaviour
     public void MaskWearingPercentage(Slider s) { maskWearingPercentage = s.value; }
     public float placesOfInterest;
     public void PlacesOfInterest(Slider s) { placesOfInterest = (int)s.value; }
-
-    public void NumberOfHospitals(Slider s) { numberOfHospitals = (int)s.value; }
-    public int numberOfHospitals;
+    public float numOfHospitals;
+    public void NumOfHospitals(Slider s) { numOfHospitals = (int)s.value;}
 }

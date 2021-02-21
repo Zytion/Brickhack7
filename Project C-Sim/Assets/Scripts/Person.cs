@@ -62,6 +62,8 @@ public class Person : MonoBehaviour
         }
     }
 
+    public bool Quarantining { get; set; }
+
     private bool recovered;
     public bool Recovered
     {
@@ -124,7 +126,8 @@ public class Person : MonoBehaviour
         // Don't move.
         if (!Moving)
         {
-            moveTimer += Time.deltaTime;
+            if(!Quarantining || !inHouse)
+                moveTimer += Time.deltaTime;
         }
         // The person is moving.
         else
