@@ -83,14 +83,14 @@ public class GameManager : MonoBehaviour
 
     public void StartButtonPress()
     {
-        if (StartResetButton.transform.GetChild(0).GetComponent<Text>().text == "Start")
+        if (StartResetButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text == "Start")
         {
-            StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Reset";
+            StartResetButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Reset";
             StartCoroutine(BeginSimulation());
         }
         else
         {
-            StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Start";
+            StartResetButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Start";
             for (int i = 0; i < actors.transform.childCount; i++)
             {
                 Destroy(actors.transform.GetChild(i).gameObject);
@@ -406,6 +406,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             StartButtonPress();
+        }
+
+        if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.B))
+        {
+            Instantiate(Resources.Load<GameObject>("WhaleB"), Vector3.zero, Quaternion.identity);
         }
 
         if (!isRunning) return;
