@@ -261,7 +261,7 @@ public class GameManager : MonoBehaviour
                         distance *= (People[i].GetComponent<Person>().SocialDistancing ? 0.5f : 1.0f) * (People[j].GetComponent<Person>().SocialDistancing ? 0.5f : 1.0f);
                     }
                     else
-                        distance = Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position;
+                        distance = Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position);
                     float infectionChance = (1 / (distance / 4 + 1 / 6)) / 200;
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= (People[i].GetComponent<Person>().SocialDistancing ? 2.0f : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
