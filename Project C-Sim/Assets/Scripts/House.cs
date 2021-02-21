@@ -14,9 +14,6 @@ public class House : Building
 
     public GameObject Actors { get; set; }
 
-    private float quarantineTimer;
-    private float quarantineTime;
-
     // Start is called before the first frame update
     public void Start()
     {
@@ -25,7 +22,6 @@ public class House : Building
         personPrefab.transform.localScale = new Vector2(.5f, .5f);
         people = new List<GameObject>();
         SpawnRandomResidents();
-        quarantineTime = 45f;
     }
 
     public void SpawnRandomResidents()
@@ -51,14 +47,13 @@ public class House : Building
         {
             person.GetComponent<Person>().Quarantining = true;
         }
-        quarantineTimer = 0;
     }
 
     private void Update()
     {
         if(ResidentsInQuarantine)
         {
-            if(quarantineTimer > quarantineTime)
+            if(CheckQuarantineFinish())
             {
                 //End quarantine
                 ResidentsInQuarantine = false;
@@ -67,7 +62,21 @@ public class House : Building
                     person.GetComponent<Person>().Quarantining = false;
                 }
             }
-            quarantineTimer += Time.deltaTime;
         }
+    }
+
+    private bool CheckQuarantineFinish()
+    {
+        foreach (GameObject person in people)
+        {
+            if (person.GetComponent<Person>().Infected)
+                return false;
+        }
+        return true;
+    }
+
+    public void RemovePerson(GameObject person)
+    {
+        people.Remove(person);
     }
 }

@@ -346,6 +346,7 @@ public class GameManager : MonoBehaviour
                     float infectionChance = (1 / (distance + 1 / 3)) / 200;
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= People[j].GetComponent<Person>().Recovered ? 0.1f : 1.0f;
+                    infectionChance *= People[i].GetComponent<Person>().Quarantining && People[i].GetComponent<Person>().InHouse ? 0.1f : 1.0f;
                     People[j].GetComponent<Person>().Infected = Random.Range(0.0f, 1.0f) < infectionChance;
                     // Person was infected, so increment the infection counter.
                     if (People[j].GetComponent<Person>().Infected)

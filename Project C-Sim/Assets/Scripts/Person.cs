@@ -63,7 +63,6 @@ public class Person : MonoBehaviour
     }
 
     public bool Quarantining { get; set; }
-
     private bool recovered;
     public bool Recovered
     {
@@ -85,6 +84,7 @@ public class Person : MonoBehaviour
     public bool Moving { get; set; }
     public bool SocialDistancing { get; set; }
     public bool CloseToDest => closeToDest;
+    public bool InHouse => inHouse;
 
     private float moveTimer;
     private float coolDown;
@@ -146,6 +146,7 @@ public class Person : MonoBehaviour
                     //DEAD
                     if (Recovered)
                         gameManager.NumRecovered--;
+                    home.GetComponent<House>().RemovePerson(gameObject);
                     gameManager.KillPerson(gameObject);
                 }
                 // Recovered
