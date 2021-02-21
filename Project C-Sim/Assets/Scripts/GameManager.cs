@@ -313,9 +313,38 @@ public class GameManager : MonoBehaviour
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= People[j].GetComponent<Person>().Recovered ? 0.1f : 1.0f;
                     People[j].GetComponent<Person>().Infected = Random.Range(0.0f, 1.0f) < infectionChance;
-                    NumInfected++;
+                    // Person was infected, so increment the infection counter.
+                    if (People[j].GetComponent<Person>().Infected)
+                    {
+                        NumInfected++;
+                    }
                 }
             }
+        }
+    }
+
+    public void UpdateGraph()
+    {
+        //Debug.Log("Number Infected: " + NumInfected);
+        int iVal = (int)((NumInfected / (float)People.Count) * 100);
+        iValues.Add(iVal);
+        int sVal = (int)((NumInfected / (float)People.Count) * 100);
+        sValues.Add(sVal);
+
+        //Debug.Log(iVal + "," + sVal);
+        if (iValues.Count > 30)
+        {
+            iValues.RemoveAt(0);
+        }
+        if (sValues.Count > 30)
+        {
+            sValues.RemoveAt(0);
+        }
+
+        for (int i = 0; i < iValues.Count; ++i)
+        {
+            healthyGraph.UpdateValue(i, sValues[i]);
+            infectedGraph.UpdateValue(i, iValues[i]);
         }
     }
 
@@ -338,30 +367,5 @@ public class GameManager : MonoBehaviour
             infectionTimer = 0;
             CalculateInfections();
         }
-
-        Debug.Log("Number Infected: " +NumInfected);
-        int iVal = (int)((NumInfected / (float)People.Count) * 100);
-        iValues.Add(iVal);
-        int sVal = (int)((NumInfected / (float)People.Count) * 100);
-        sValues.Add(sVal);
-
-        Debug.Log(iVal + "," + sVal);
-
-
-        if(iValues.Count > 30)
-        {
-            iValues.RemoveAt(0);
-        }
-        if (sValues.Count > 30)
-        {
-            sValues.RemoveAt(0);
-        }
-
-		for(int i = 0; i < iValues.Count; ++i)
-		{
-            healthyGraph.UpdateValue(i, sValues[i]);
-			infectedGraph.UpdateValue(i, iValues[i]);
-		}
-
 	}
 }
