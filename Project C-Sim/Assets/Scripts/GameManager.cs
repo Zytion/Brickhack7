@@ -1,9 +1,5 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +39,10 @@ public class GameManager : MonoBehaviour
     private SimulationValues simValues;
     private bool isRunning;
     private GameObject actors;
+    private WindowGraph windowGraph;
+
+    private List<int> iValues;
+    private List<int> sValues;
 
     /// <summary>
     /// 
@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
         simValues = GameObject.Find("SimValues").GetComponent<SimulationValues>();
         GameObject simulation = GameObject.Find("Simulation");
         actors = GameObject.Find("Actors");
+        windowGraph = GameObject.Find("GraphWindow").GetComponent<WindowGraph>();
         StartResetButton = GameObject.Find("Start_Reset_Button");
         StartResetButton.GetComponent<Button>().onClick.AddListener(() =>
         {
@@ -110,6 +111,8 @@ public class GameManager : MonoBehaviour
         poiPositions = new List<Vector2>();
         housePositions = new List<Vector2>();
         isRunning = true;
+        iValues = new List<int>();
+        sValues = new List<int>();
 
         // Read values from the simulation sliders.
         ReadSimValues();
@@ -277,7 +280,6 @@ public class GameManager : MonoBehaviour
         NumInfected--;
         NumDead++;
         Destroy(person);
-
     }
 
     public void CalculateInfections()
@@ -333,6 +335,20 @@ public class GameManager : MonoBehaviour
         {
             infectionTimer = 0;
             CalculateInfections();
+        }
+
+        iValues.Add((int)(((float)NumInfected / People.Count) * 100));
+        sValues.Add((int)(((float)NumHealthy / People.Count) * 100)); 
+
+        windowGraph.ShowGraph(iValues, sValues);
+
+        if(iValues.Count > 50)
+        {
+            iValues.RemoveAt(0);
+        }
+        if (sValues.Count > 50)
+        {
+            sValues.RemoveAt(0);
         }
     }
 }

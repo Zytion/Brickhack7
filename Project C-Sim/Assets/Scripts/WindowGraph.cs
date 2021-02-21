@@ -73,7 +73,7 @@ public class WindowGraph : MonoBehaviour
 		return gameObject;
 	}
 
-	private void ShowGraph(List<int> iValues, List<int> sValues)
+	public void ShowGraph(List<int> iValues, List<int> sValues)
 	{
 		foreach (GameObject dot in dots)
 		{
