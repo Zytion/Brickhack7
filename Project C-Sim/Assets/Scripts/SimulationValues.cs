@@ -5,4 +5,9 @@ using UnityEngine;
 public class SimulationValues : MonoBehaviour
 {
     public int population;
+
+    public void SetText ()
+    {
+
+    }
 }
