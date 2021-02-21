@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum BuildingType
+{
+    House,
+    POI,
+    Hospital
+}
 public class GameManager : MonoBehaviour
 {
     public Vector2 SimulationExtents { get; set; }
     public Vector2 SimulationPosition { get; set; }
     public int NumberOfHouses { get; set; }
     public int NumberOfPointsOfInterest { get; set; }
+    public int NumberOfHospitals { get; set; }
     public List<GameObject> People { get; set; }
     public int MaxHouseCapacity { get; set; }
     public float SeperationDistance { get; set; }
@@ -26,7 +33,9 @@ public class GameManager : MonoBehaviour
 
     private List<Vector2> poiPositions;
     private List<Vector2> housePositions;
+    private List<Vector2> hospitalPositions;
     private GameObject housePrefab;
+    private GameObject hospitalPrefab;
     private List<GameObject> poiPrefabs;
     private float scaleFactor;
     private float buildingHalfWidth;
@@ -102,6 +111,7 @@ public class GameManager : MonoBehaviour
         poiPrefabs[1].transform.localScale = new Vector2(scaleFactor, scaleFactor);
         poiPrefabs.Add(Resources.Load<GameObject>("Buildings/POI3"));
         poiPrefabs[2].transform.localScale = new Vector2(scaleFactor, scaleFactor);
+        hospitalPrefab = Resources.Load<GameObject>("Buildings/Hospital");
     }
 
     /// <summary>
@@ -113,6 +123,7 @@ public class GameManager : MonoBehaviour
         People = new List<GameObject>();
         poiPositions = new List<Vector2>();
         housePositions = new List<Vector2>();
+        hospitalPositions = new List<Vector2>();
         isRunning = true;
         iValues = new List<int>();
         sValues = new List<int>();
@@ -121,9 +132,14 @@ public class GameManager : MonoBehaviour
         ReadSimValues();
 
         // Generate a random number of houses.
-        SpawnRandomBuildings(NumberOfHouses, false, housePrefab);
+        SpawnRandomBuildings(NumberOfHouses, BuildingType.House, housePrefab);
         // Generate a random number of points of interest.
-        SpawnRandomBuildings(NumberOfPointsOfInterest, true, null);
+        SpawnRandomBuildings(NumberOfPointsOfInterest, BuildingType.POI, null);
+        // Only generate hospitals if the user chose to.
+        if(NumberOfHospitals > 0)
+        {
+            SpawnRandomBuildings(NumberOfHospitals, BuildingType.Hospital, hospitalPrefab);
+        }
 
         // Wait until there are people in the list.
         while(People.Count == 0)
@@ -135,6 +151,7 @@ public class GameManager : MonoBehaviour
         List<int> indiciesUsed = new List<int>();
         int count = 0;
         int numberInfected = (int)(People.Count * infectionRatio);
+        NumInfected = numberInfected;
         // Make sure there is at least one initial infection.
         if (numberInfected == 0)
         {
@@ -197,6 +214,8 @@ public class GameManager : MonoBehaviour
         SeperationDistance = simValues.socialDistance / 5.0f;
         NumberOfPointsOfInterest = (int)simValues.placesOfInterest;
         MaxHouseCapacity = simValues.maxHouseDensity;
+        //NumberOfHospitals = simValues.numberOfHospitals;
+        NumberOfHospitals = 1;
         infectionRatio = simValues.initallyInfected;
         maskRatio = simValues.maskWearingPercentage;
         socialDistancingRatio = simValues.populationSocialDistance;
@@ -209,7 +228,7 @@ public class GameManager : MonoBehaviour
     /// <param name="num"></param>
     /// <param name="isPOI"></param>
     /// <param name="prefab"></param>
-    public void SpawnRandomBuildings(int num, bool isPOI, GameObject prefab)
+    public void SpawnRandomBuildings(int num, BuildingType buildingType, GameObject prefab)
     {
         for(int i = 0; i < num; i++)
         {
@@ -225,17 +244,29 @@ public class GameManager : MonoBehaviour
                 buildingPosition = new Vector2(randomX, randomY);
             } while (poiPositions.Contains(buildingPosition) || housePositions.Contains(buildingPosition));
 
-            GameObject building = Instantiate(isPOI ? GetRandomPointOfInterest() : prefab, buildingPosition, Quaternion.identity);
-            if (!isPOI)
+            GameObject building = Instantiate(buildingType == BuildingType.POI ? GetRandomPointOfInterest() : prefab, buildingPosition, Quaternion.identity);
+
+            switch (buildingType)
             {
-                building.GetComponent<House>().gameManager = this;
-                building.GetComponent<House>().MaxHouseCapacity = MaxHouseCapacity;
-                building.GetComponent<House>().Actors = actors;
-                housePositions.Add(buildingPosition);
-            }
-            else
-            {
-                poiPositions.Add(buildingPosition);
+                case BuildingType.House:
+                    {
+                        building.GetComponent<House>().gameManager = this;
+                        building.GetComponent<House>().MaxHouseCapacity = MaxHouseCapacity;
+                        building.GetComponent<House>().Actors = actors;
+                        housePositions.Add(buildingPosition);
+                        break;
+                    }
+                case BuildingType.POI:
+                    {
+                        poiPositions.Add(buildingPosition);
+                        break;
+                    }
+                case BuildingType.Hospital:
+                    {
+                        poiPositions.Add(buildingPosition);
+                        hospitalPositions.Add(buildingPosition);
+                        break;
+                    }
             }
             building.transform.parent = actors.transform;
         }
@@ -330,7 +361,7 @@ public class GameManager : MonoBehaviour
     public void UpdateGraph()
     {
         Debug.Log("Number Infected: " + NumInfected);
-        Debug.Log("Number Susceptible: " + NumHealthy + NumInfected);
+        Debug.Log("Number Susceptible: " + (NumHealthy + NumInfected));
         int iVal = (int)((NumInfected / (float)initalPeople) * 100);
         iValues.Add(iVal);
         int sVal = (int)(((NumHealthy + NumInfected) / (float)initalPeople) * 100);
