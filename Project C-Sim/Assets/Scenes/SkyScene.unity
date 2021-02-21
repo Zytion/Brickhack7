@@ -3616,7 +3616,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.6391955, g: 0.66944546, b: 0.7169812, a: 0}
+  m_BackGroundColor: {r: 0.57938766, g: 0.8773585, b: 0.6300435, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -6070,7 +6070,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1861600494}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.35970008
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11944,7 +11944,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -5
   m_Sprite: {fileID: 21300000, guid: 7ee5daa6e71c25e4087bedfd478d843f, type: 3}
   m_Color: {r: 0.57938766, g: 0.8773585, b: 0.6300435, a: 1}
   m_FlipX: 0
@@ -11964,8 +11964,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1798046987}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.501, y: -0.004, z: 1}
-  m_LocalScale: {x: 15.493925, y: 18.63403, z: 15.108787}
+  m_LocalPosition: {x: 1.501, y: -0.803, z: 1}
+  m_LocalScale: {x: 15.493925, y: 15.791418, z: 15.108787}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
