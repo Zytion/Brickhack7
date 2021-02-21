@@ -140,10 +140,9 @@ public class Person : MonoBehaviour
                 if(Random.Range(0,1.0f) < GetDeathChance())
                 {
                     //DEAD
-                    gameManager.NumInfected--;
-                    gameManager.NumDead++;
                     gameManager.KillPerson(gameObject);
                 }
+                // Recovered
                 else
                 {
                     gameManager.NumInfected--;

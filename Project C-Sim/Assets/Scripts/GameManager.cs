@@ -330,9 +330,10 @@ public class GameManager : MonoBehaviour
     public void UpdateGraph()
     {
         Debug.Log("Number Infected: " + NumInfected);
-        int iVal = (int)((NumInfected / (float)People.Count) * 100);
+        Debug.Log("Number Susceptible: " + NumHealthy + NumInfected);
+        int iVal = (int)((NumInfected / (float)initalPeople) * 100);
         iValues.Add(iVal);
-        int sVal = (int)(((NumHealthy + NumInfected) / (float)People.Count) * 100);
+        int sVal = (int)(((NumHealthy + NumInfected) / (float)initalPeople) * 100);
         sValues.Add(sVal);
 
         Debug.Log(iVal + "," + sVal);
