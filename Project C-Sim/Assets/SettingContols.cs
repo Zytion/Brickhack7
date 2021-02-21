@@ -18,12 +18,26 @@ public class SettingContols : MonoBehaviour
 
 	public void UpdateSlider()
 	{
-		slider.value = int.Parse(inputField.text);
+		if(slider.wholeNumbers)
+		{
+			slider.value = int.Parse(inputField.text);
+		}
+		else
+		{
+			slider.value = float.Parse(inputField.text);
+		}
 	}
 
 	public void UpdateInput()
 	{
-		inputField.text = ((int)slider.value).ToString();
+		if (slider.wholeNumbers)
+		{
+			inputField.text = ((int)slider.value).ToString();
+		}
+		else
+		{
+			inputField.text = slider.value.ToString();
+		}
 	}
 
 }
