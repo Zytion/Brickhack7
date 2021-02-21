@@ -9,7 +9,16 @@ public class Person : MonoBehaviour
 {
     public int Age { get; set; }
     public Sex Sex { get; set; }
-    public bool HasMask { get; set; }
+    private bool hasMask;
+    public bool HasMask
+    {
+        get { return hasMask; }
+        set
+        {
+            infectionSound = Resources.Load<AudioClip>("Drip");
+            this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("MaskPerson");
+        }
+    }
     private bool infected;
     public bool Infected
     {
@@ -19,6 +28,10 @@ public class Person : MonoBehaviour
             if (value)
             {
                 //Change color
+                //Particle Effect
+                GameObject.Find("GameManager").GetComponent<AudioSource>().Play();
+                GameObject par = (GameObject)Instantiate(Resources.Load("InfectedParticle"), this.transform.position, Quaternion.identity);
+                par.transform.SetParent(this.transform);
                 GetComponentInChildren<SpriteRenderer>().color = Color.red;
             }
             infected = value;
@@ -56,6 +69,7 @@ public class Person : MonoBehaviour
     private Rigidbody2D rb;
     private float recoverTimer;
     private float recoverTime;
+    private AudioClip infectionSound;
     
     // Start is called before the first frame update
     public void Start()
