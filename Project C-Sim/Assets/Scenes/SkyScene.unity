@@ -11061,6 +11061,7 @@ MonoBehaviour:
   populationSocialDistance: 0.25
   maskWearingPercentage: 0.8
   placesOfInterest: 5
+  numberOfHospitals: 0
 --- !u!1 &1415275290
 GameObject:
   m_ObjectHideFlags: 0
