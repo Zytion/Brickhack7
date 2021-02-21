@@ -7,8 +7,21 @@ public enum Sex
 }
 public class Person : MonoBehaviour
 {
-    public int Age { get; set; }
-    public Sex Sex { get; set; }
+    private int age;
+    public int Age {
+        get { return age; }
+        set { age = value; this.transform.localScale = new Vector3(Mathf.Clamp(value/120f, 0.4f, 0.8f), Mathf.Clamp(value / 120f, 0.4f, 0.8f), 1);}
+    }
+    private Sex sex;
+    public Sex Sex {
+        get { return sex; }
+        set { if(value == Sex.Female)
+            {
+                this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("WPerson");
+            }
+            sex = value;
+        } 
+    }
     private bool hasMask;
     public bool HasMask
     {
@@ -17,7 +30,14 @@ public class Person : MonoBehaviour
         {
             if (value)
             {
-                this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("MaskPerson");
+                if(sex == Sex.Male)
+                {
+                    this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("MaskPerson");
+                }
+                else
+                {
+                    this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("WMPerson");
+                }
             }
             hasMask = value;
         }
@@ -120,12 +140,11 @@ public class Person : MonoBehaviour
                 if(Random.Range(0,1.0f) < GetDeathChance())
                 {
                     //DEAD
-                    gameManager.NumInfected--;
-                    gameManager.NumDead++;
                     if (Recovered)
                         gameManager.NumRecovered--;
                     gameManager.KillPerson(gameObject);
                 }
+                // Recovered
                 else
                 {
                     gameManager.NumInfected--;
