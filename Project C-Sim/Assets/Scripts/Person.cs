@@ -130,10 +130,6 @@ public class Person : MonoBehaviour
             }
             inHouse = !inHouse;
         }
-
-
-
-        //
     }
 
     public void Move()

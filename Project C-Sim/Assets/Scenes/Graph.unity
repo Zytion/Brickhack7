@@ -604,5 +604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   circleSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  upSprite: {fileID: 21300000, guid: 93d017785bb88e6429e0d96e0d361e92, type: 3}
+  downSprite: {fileID: 21300000, guid: 177c9e142031aef4686d6d0dcef2c6ac, type: 3}
   infectedValues: 
   suseptableValues: 

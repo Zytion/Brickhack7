@@ -36,7 +36,7 @@ public class SettingContols : MonoBehaviour
 		}
 		else
 		{
-			inputField.text = slider.value.ToString();
+			inputField.text = (Mathf.Round(slider.value * 100f) / 100f).ToString();
 		}
 	}
 
