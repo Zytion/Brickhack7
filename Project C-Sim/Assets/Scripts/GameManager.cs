@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,24 +9,31 @@ public class GameManager : MonoBehaviour
     public Vector2 SimulationPosition { get; set; }
     public int NumberOfHouses { get; set; }
     public int NumberOfPointsOfInterest { get; set; }
+    public List<GameObject> People { get; set; }
+    public float SeperationDistance { get; set; }
+
     private List<Vector2> poiPositions;
     private List<Vector2> housePositions;
     private GameObject housePrefab;
     private List<GameObject> poiPrefabs;
     private float scaleFactor;
     private float buildingHalfWidth;
+    private float sepForceMult;
 
     /// <summary>
     /// 
     /// </summary>
     public void Start()
     {
-        NumberOfHouses = 1;
-        NumberOfPointsOfInterest = 5;
+        NumberOfHouses = 10;
+        SeperationDistance = 1f;
+        NumberOfPointsOfInterest = 3;
         scaleFactor = 1f;
         buildingHalfWidth = scaleFactor / 2.0f;
+        sepForceMult = 20.0f;
         Debug.Log(buildingHalfWidth);
         InitializePrefabs();
+        People = new List<GameObject>();
         poiPositions = new List<Vector2>();
         housePositions = new List<Vector2>();
         GameObject simulation = GameObject.Find("Simulation");
@@ -114,6 +122,28 @@ public class GameManager : MonoBehaviour
         return poiPositions[Random.Range(0, poiPositions.Count)];
     }
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="person"></param>
+    /// <returns></returns>
+    public Vector2 GetSeperation(GameObject person)
+    {
+        Vector2 netForce = Vector2.zero;
+        foreach(GameObject p in People)
+        {
+            // Ignore the person if its equal to person, or they aren't moving, or they are too far.
+            if (p == person 
+                || !p.GetComponent<Person>().Moving
+                || Vector3.SqrMagnitude(person.transform.position - p.transform.position) > SeperationDistance * SeperationDistance) continue;
+
+            Vector2 diff = (Vector2)(person.transform.position - p.transform.position);
+            netForce += diff * (SeperationDistance * SeperationDistance - diff.sqrMagnitude) * sepForceMult;
+        }
+        return netForce;
+    }
+
+
     /// <summary>
     /// 
     /// </summary>

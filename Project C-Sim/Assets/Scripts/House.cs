@@ -12,7 +12,7 @@ public class House : Building
     // Start is called before the first frame update
     public void Start()
     {
-        NumberOfResidents = 1;
+        NumberOfResidents = Random.Range(1, 5);
         personPrefab = Resources.Load<GameObject>("Person");
         personPrefab.transform.localScale = new Vector2(.5f, .5f);
         people = new List<GameObject>();
@@ -30,6 +30,7 @@ public class House : Building
             personScript.home = this.gameObject;
             personScript.gameManager = this.gameManager;
             people.Add(newPerson);
+            gameManager.People.Add(newPerson);
         }
     }
 }
