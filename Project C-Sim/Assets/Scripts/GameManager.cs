@@ -308,6 +308,7 @@ public class GameManager : MonoBehaviour
                     }
                     else
                         distance = Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position);
+
                     float infectionChance = (1 / (distance / 4 + 1 / 6)) / 200;
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= (People[i].GetComponent<Person>().SocialDistancing ? 2.0f : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
@@ -339,8 +340,14 @@ public class GameManager : MonoBehaviour
             CalculateInfections();
         }
 
-        iValues.Add((int)((NumInfected / (float)People.Count) * 100));
-        sValues.Add((int)((NumHealthy / (float)People.Count) * 100)); 
+        Debug.Log("Number Infected: " +NumInfected);
+        int iVal = (int)((NumInfected / (float)People.Count) * 100);
+        iValues.Add(iVal);
+        int sVal = (int)((NumInfected / (float)People.Count) * 100);
+        sValues.Add(sVal);
+
+        Debug.Log(iVal + "," + sVal);
+
 
         if(iValues.Count > 30)
         {
@@ -350,9 +357,10 @@ public class GameManager : MonoBehaviour
         {
             sValues.RemoveAt(0);
         }
+
 		for(int i = 0; i < iValues.Count; ++i)
 		{
-			healthyGraph.UpdateValue(i, sValues[i]);
+            healthyGraph.UpdateValue(i, sValues[i]);
 			infectedGraph.UpdateValue(i, iValues[i]);
 		}
 
