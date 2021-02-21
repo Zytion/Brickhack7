@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     private int initalPeople;
     private SimulationValues simValues;
     private bool isRunning;
+    private GameObject actors;
 
     /// <summary>
     /// 
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
         isRunning = false;
         simValues = GameObject.Find("SimValues").GetComponent<SimulationValues>();
         GameObject simulation = GameObject.Find("Simulation");
+        actors = GameObject.Find("Actors");
         StartResetButton = GameObject.Find("Start_Reset_Button");
         StartResetButton.GetComponent<Button>().onClick.AddListener(() =>
         {
@@ -64,6 +66,11 @@ public class GameManager : MonoBehaviour
             else
             {
                 StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Start";
+                for(int i=0; i < actors.transform.childCount; i++)
+                {
+                    Destroy(actors.transform.GetChild(i).gameObject);
+                }
+                isRunning = false;
             }
         });
         SimulationExtents = simulation.GetComponent<BoxCollider2D>().bounds.extents;
@@ -143,11 +150,6 @@ public class GameManager : MonoBehaviour
         NumberOfPointsOfInterest = (int)simValues.placesOfInterest;
         MaxHouseCapacity = simValues.maxHouseDensity;
         infectionRatio = simValues.initallyInfected;
-        Debug.Log("NumberOfHouses " + NumberOfHouses);
-        Debug.Log("SeperationDistance " + SeperationDistance);
-        Debug.Log("NumberOfPointsOfInterest " + NumberOfPointsOfInterest);
-        Debug.Log("MaxHouseCapacity " + MaxHouseCapacity);
-        Debug.Log("initallyInfected " + infectionRatio);
         infectionTimer = 0;
         infectionCoolDown = 1 / 6f;
     }
@@ -173,17 +175,19 @@ public class GameManager : MonoBehaviour
                 buildingPosition = new Vector2(randomX, randomY);
             } while (poiPositions.Contains(buildingPosition) || housePositions.Contains(buildingPosition));
 
-            GameObject house = Instantiate(isPOI ? GetRandomPointOfInterest() : prefab, buildingPosition, Quaternion.identity);
+            GameObject building = Instantiate(isPOI ? GetRandomPointOfInterest() : prefab, buildingPosition, Quaternion.identity);
             if (!isPOI)
             {
-                house.GetComponent<House>().gameManager = this;
-                house.GetComponent<House>().MaxHouseCapacity = MaxHouseCapacity;
+                building.GetComponent<House>().gameManager = this;
+                building.GetComponent<House>().MaxHouseCapacity = MaxHouseCapacity;
+                building.GetComponent<House>().Actors = actors;
                 housePositions.Add(buildingPosition);
             }
             else
             {
                 poiPositions.Add(buildingPosition);
             }
+            building.transform.parent = actors.transform;
         }
         
     }
