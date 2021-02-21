@@ -46,6 +46,7 @@ public class Person : MonoBehaviour
             if (value)
             {
                 //Change color
+                GameObject par = (GameObject)Instantiate(Resources.Load("RecoveredEffect"), this.transform.position, Quaternion.identity);
                 GetComponentInChildren<SpriteRenderer>().color = Color.yellow;
             }
             recovered = value;
