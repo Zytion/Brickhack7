@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
     private float infectionTimer;
     private float infectionCoolDown;
     private float infectionRatio;
+    private float maskRatio;
+    private float socialDistancingRatio;
     private int initalPeople;
     private SimulationValues simValues;
     private bool isRunning;
@@ -147,7 +149,40 @@ public class GameManager : MonoBehaviour
             count++;
         }
 
-        NumInfected = numberInfected;
+        // keep track of the indicies of people initially infected.
+        indiciesUsed.Clear();
+        count = 0;
+        int numberWearingMasks = (int)(People.Count * maskRatio);
+
+        // Infect numberInfected number of people.
+        while (count < numberWearingMasks)
+        {
+            int randomIndex = Random.Range(0, People.Count);
+            while (indiciesUsed.Contains(randomIndex))
+            {
+                randomIndex = ++randomIndex % People.Count;
+            }
+            People[randomIndex].GetComponent<Person>().HasMask = true;
+            count++;
+        }
+
+        indiciesUsed.Clear();
+        count = 0;
+        int numberSocialDistant = (int)(People.Count * socialDistancingRatio);
+
+        // Infect numberInfected number of people.
+        while (count < numberSocialDistant)
+        {
+            int randomIndex = Random.Range(0, People.Count);
+            while (indiciesUsed.Contains(randomIndex))
+            {
+                randomIndex = ++randomIndex % People.Count;
+            }
+            People[randomIndex].GetComponent<Person>().SocialDistancing = true;
+            count++;
+        }
+
+
         initalPeople = People.Count;
     }
     public void ReadSimValues()
@@ -157,6 +192,8 @@ public class GameManager : MonoBehaviour
         NumberOfPointsOfInterest = (int)simValues.placesOfInterest;
         MaxHouseCapacity = simValues.maxHouseDensity;
         infectionRatio = simValues.initallyInfected;
+        maskRatio = simValues.maskWearingPercentage;
+        socialDistancingRatio = simValues.populationSocialDistance;
         infectionTimer = 0;
         infectionCoolDown = 1 / 6f;
     }
@@ -237,6 +274,7 @@ public class GameManager : MonoBehaviour
 
     public void KillPerson(GameObject person)
     {
+        GameObject par = (GameObject)Instantiate(Resources.Load("DeathParticleEffect"), this.transform.position, Quaternion.identity);
         People.Remove(person);
         //Instatiate skull and cross bones
         NumInfected--;
