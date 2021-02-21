@@ -250,9 +250,17 @@ public class GameManager : MonoBehaviour
                     // Infect this person
                     //Get infection rate based on distance
                     float maskReduction = 0.4242f;
-                    float distance = People[i].GetComponent<Person>().CloseToDest || People[j].GetComponent<Person>().CloseToDest ? SeperationDistance : Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position);
-                    float infectionChance = (1 / (distance / 8 + 1 / 8)) / 200;
+                    float distance = 0.0f;
+                    if (People[i].GetComponent<Person>().CloseToDest || People[j].GetComponent<Person>().CloseToDest)
+                    {
+                        distance = SeperationDistance;
+                        distance *= (People[i].GetComponent<Person>().SocialDistancing ? 0.5f : 1.0f) * (People[j].GetComponent<Person>().SocialDistancing ? 0.5f : 1.0f);
+                    }
+                    else
+                        distance = Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position;
+                    float infectionChance = (1 / (distance / 4 + 1 / 6)) / 200;
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
+                    infectionChance *= (People[i].GetComponent<Person>().SocialDistancing ? 2.0f : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= People[j].GetComponent<Person>().Recovered ? 0.1f : 1.0f;
                     People[j].GetComponent<Person>().Infected = Random.Range(0.0f, 1.0f) < infectionChance;
                     NumInfected++;
