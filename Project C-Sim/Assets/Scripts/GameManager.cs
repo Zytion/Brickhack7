@@ -15,11 +15,12 @@ public class GameManager : MonoBehaviour
     public float InfectionRadius { get; set; }
     public int NumInfected { get; set; }
     public int NumDead { get; set; }
+    public int NumRecovered { get; set; }
     public GameObject StartResetButton { get; set; }
     private int numHealthy;
     public int NumHealthy
     {
-        get { return initalPeople - NumInfected - NumDead; }
+        get { return initalPeople - NumInfected - NumDead - NumRecovered; }
     }
 
 
