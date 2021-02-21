@@ -33,7 +33,7 @@ public class Person : MonoBehaviour
             {
                 //Change color
                 //Particle Effect
-                GameObject.Find("GameManager").GetComponent<AudioSource>().Play();
+                gameManager.GetComponent<AudioSource>().Play();
                 GameObject par = (GameObject)Instantiate(Resources.Load("InfectedParticle"), this.transform.position, Quaternion.identity);
                 par.transform.SetParent(this.transform);
                 GetComponentInChildren<SpriteRenderer>().color = Color.red;
@@ -85,9 +85,9 @@ public class Person : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         speed = 5f;
         closeToDest = true;
-        destinationRadius = 1f;
         SocialDistancing = false;
         HasMask = false;
+        destinationRadius = gameManager.SeperationDistance;
         infected = false;
         recoverTime = 60.0f;
     }
