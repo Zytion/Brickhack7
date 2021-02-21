@@ -20,7 +20,8 @@ using CodeMonkey.Utils;
 public class Window_Graph : MonoBehaviour {
 
     [SerializeField] private Sprite dotSprite;
-    private RectTransform graphContainer;
+	[SerializeField] private Color color;
+	private RectTransform graphContainer;
     private RectTransform labelTemplateX;
     private RectTransform labelTemplateY;
     private RectTransform dashContainer;
@@ -63,15 +64,23 @@ public class Window_Graph : MonoBehaviour {
         yLabelList = new List<RectTransform>();
         graphVisualObjectList = new List<IGraphVisualObject>();
         
-        lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f), this);
+        lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, color, color, this);
         barChartVisual = new BarChartVisual(graphContainer, Color.white, .8f, this);
 
-        valueList = new List<int> { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
+        valueList = new List<int>(30);
+		for(int i = 0; i < valueList.Capacity; ++i)
+			valueList.Add(0);
+		ShowGraph(valueList, lineGraphVisual, 100);
 
-        HideTooltip();
+		HideTooltip();
     }
 
-    private void ShowTooltip(string tooltipText, Vector2 anchoredPosition) {
+	//public void Update()
+	//{
+	//	UpdateValue(UnityEngine.Random.Range(0, 29), UnityEngine.Random.Range(20, 100));
+	//}
+
+	private void ShowTooltip(string tooltipText, Vector2 anchoredPosition) {
         // Show Tooltip GameObject
         tooltipGameObject.SetActive(true);
 
@@ -240,7 +249,7 @@ public class Window_Graph : MonoBehaviour {
         UpdateValue(valueList.Count - 1, value);
     }
 
-    public void UpdateValue(int index, int value) {
+	public void UpdateValue(int index, int value) {
         float yMinimumBefore, yMaximumBefore;
         CalculateYScale(out yMinimumBefore, out yMaximumBefore);
 

@@ -39,9 +39,10 @@ public class GameManager : MonoBehaviour
     private SimulationValues simValues;
     private bool isRunning;
     private GameObject actors;
-    private WindowGraph windowGraph;
+    private Window_Graph healthyGraph;
+	private Window_Graph infectedGraph;
 
-    private List<int> iValues;
+	private List<int> iValues;
     private List<int> sValues;
 
     /// <summary>
@@ -57,8 +58,9 @@ public class GameManager : MonoBehaviour
         simValues = GameObject.Find("SimValues").GetComponent<SimulationValues>();
         GameObject simulation = GameObject.Find("Simulation");
         actors = GameObject.Find("Actors");
-        windowGraph = GameObject.Find("GraphWindow").GetComponent<WindowGraph>();
-        StartResetButton = GameObject.Find("Start_Reset_Button");
+		healthyGraph = GameObject.Find("healthyGraph").GetComponent<Window_Graph>();
+		infectedGraph = GameObject.Find("infectedGraph").GetComponent<Window_Graph>();
+		StartResetButton = GameObject.Find("Start_Reset_Button");
         StartResetButton.GetComponent<Button>().onClick.AddListener(() =>
         {
             StartButtonPress();
@@ -340,15 +342,19 @@ public class GameManager : MonoBehaviour
         iValues.Add((int)(((float)NumInfected / People.Count) * 100));
         sValues.Add((int)(((float)NumHealthy / People.Count) * 100)); 
 
-        windowGraph.ShowGraph(iValues, sValues);
-
-        if(iValues.Count > 50)
+        if(iValues.Count > 30)
         {
             iValues.RemoveAt(0);
         }
-        if (sValues.Count > 50)
+        if (sValues.Count > 30)
         {
             sValues.RemoveAt(0);
         }
-    }
+		for(int i = 0; i < iValues.Count; ++i)
+		{
+			healthyGraph.UpdateValue(i, sValues[i]);
+			infectedGraph.UpdateValue(i, iValues[i]);
+		}
+
+	}
 }
