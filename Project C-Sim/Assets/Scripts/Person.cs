@@ -15,7 +15,6 @@ public class Person : MonoBehaviour
         get { return hasMask; }
         set
         {
-            infectionSound = Resources.Load<AudioClip>("Drip");
             this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("MaskPerson");
         }
     }
@@ -69,7 +68,6 @@ public class Person : MonoBehaviour
     private Rigidbody2D rb;
     private float recoverTimer;
     private float recoverTime;
-    private AudioClip infectionSound;
     
     // Start is called before the first frame update
     public void Start()

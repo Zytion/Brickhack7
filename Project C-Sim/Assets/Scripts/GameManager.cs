@@ -234,6 +234,7 @@ public class GameManager : MonoBehaviour
 
     public void KillPerson(GameObject person)
     {
+        GameObject par = (GameObject)Instantiate(Resources.Load("DeathParticleEffect"), this.transform.position, Quaternion.identity);
         People.Remove(person);
         //Instatiate skull and cross bones
         NumInfected--;
