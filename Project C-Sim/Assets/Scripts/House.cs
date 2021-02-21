@@ -7,6 +7,7 @@ public class House : Building
     public int NumberOfResidents { get; set; }
     public GameObject personPrefab { get; set; }
     public List<GameObject> people { get; set; }
+    public bool ResidentsInQuarantine { get; set; }
 
     public GameManager gameManager { get; set; }
     public int MaxHouseCapacity { get; set;}
@@ -37,5 +38,45 @@ public class House : Building
             gameManager.People.Add(newPerson);
             newPerson.transform.parent = Actors.transform;
         }
+    }
+
+    public void QuarantineResidents()
+    {
+        ResidentsInQuarantine = true;
+        foreach(GameObject person in people)
+        {
+            person.GetComponent<Person>().Quarantining = true;
+        }
+    }
+
+    private void Update()
+    {
+        if(ResidentsInQuarantine)
+        {
+            if(CheckQuarantineFinish())
+            {
+                //End quarantine
+                ResidentsInQuarantine = false;
+                foreach (GameObject person in people)
+                {
+                    person.GetComponent<Person>().Quarantining = false;
+                }
+            }
+        }
+    }
+
+    private bool CheckQuarantineFinish()
+    {
+        foreach (GameObject person in people)
+        {
+            if (person.GetComponent<Person>().Infected)
+                return false;
+        }
+        return true;
+    }
+
+    public void RemovePerson(GameObject person)
+    {
+        people.Remove(person);
     }
 }

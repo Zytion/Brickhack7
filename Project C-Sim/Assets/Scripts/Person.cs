@@ -62,6 +62,7 @@ public class Person : MonoBehaviour
         }
     }
 
+    public bool Quarantining { get; set; }
     private bool recovered;
     public bool Recovered
     {
@@ -83,6 +84,7 @@ public class Person : MonoBehaviour
     public bool Moving { get; set; }
     public bool SocialDistancing { get; set; }
     public bool CloseToDest => closeToDest;
+    public bool InHouse => inHouse;
 
     private float moveTimer;
     private float coolDown;
@@ -94,6 +96,7 @@ public class Person : MonoBehaviour
     private Rigidbody2D rb;
     private float recoverTimer;
     private float recoverTime;
+    private bool goToHosptial;
     
     // Start is called before the first frame update
     public void Start()
@@ -123,7 +126,8 @@ public class Person : MonoBehaviour
         // Don't move.
         if (!Moving)
         {
-            moveTimer += Time.deltaTime;
+            if(!Quarantining || !inHouse)
+                moveTimer += Time.deltaTime;
         }
         // The person is moving.
         else
@@ -140,6 +144,9 @@ public class Person : MonoBehaviour
                 if(Random.Range(0,1.0f) < GetDeathChance())
                 {
                     //DEAD
+                    if (Recovered)
+                        gameManager.NumRecovered--;
+                    home.GetComponent<House>().RemovePerson(gameObject);
                     gameManager.KillPerson(gameObject);
                 }
                 // Recovered
@@ -166,6 +173,11 @@ public class Person : MonoBehaviour
             if (inHouse)
             {
                 destination = gameManager.GetRandomBuilding();
+                // Is the person going to the hospital?
+                if (gameManager.HospitalPositions.Contains(destination))
+                {
+                    goToHosptial = true;
+                }
             }
             // Move person back to home.
             else
@@ -183,6 +195,11 @@ public class Person : MonoBehaviour
         {
             Moving = false;
             rb.velocity = Vector3.zero;
+            if (goToHosptial && infected)
+            {
+                home.GetComponent<House>().QuarantineResidents();
+            }
+            goToHosptial = false;
             return;
         }
 
