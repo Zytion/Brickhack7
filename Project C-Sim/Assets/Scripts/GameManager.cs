@@ -212,9 +212,16 @@ public class GameManager : MonoBehaviour
                 for(int j = 0; j < People.Count; j++)
                 {
                     if (i == j
+                        || People[j].GetComponent<Person>().Infected
                         || Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position) > InfectionRadius * InfectionRadius)  continue;
                     // Infect this person
-                    People[j].GetComponent<Person>().Infected = Random.Range(0.0f, 1.0f) < .01f;
+                    //Get infection rate based on distance
+                    float maskReduction = 0.4242f;
+                    float distance = People[i].GetComponent<Person>().CloseToDest || People[j].GetComponent<Person>().CloseToDest ? SeperationDistance : Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position);
+                    float infectionChance = (1 / (distance / 8 + 1 / 8)) / 200;
+                    infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
+                    infectionChance *= People[j].GetComponent<Person>().Recovered ? 0.1f : 1.0f;
+                    People[j].GetComponent<Person>().Infected = Random.Range(0.0f, 1.0f) < infectionChance;
                     NumInfected++;
                 }
             }
