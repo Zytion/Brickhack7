@@ -58,26 +58,30 @@ public class GameManager : MonoBehaviour
         StartResetButton = GameObject.Find("Start_Reset_Button");
         StartResetButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            if (StartResetButton.transform.GetChild(0).GetComponent<Text>().text == "Start")
-            {
-                StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Reset";
-                StartCoroutine(BeginSimulation());
-            }
-            else
-            {
-                StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Start";
-                for(int i=0; i < actors.transform.childCount; i++)
-                {
-                    Destroy(actors.transform.GetChild(i).gameObject);
-                }
-                isRunning = false;
-            }
+            StartButtonPress();
         });
         SimulationExtents = simulation.GetComponent<BoxCollider2D>().bounds.extents;
         SimulationPosition = simulation.transform.position;
         InitializePrefabs();
     }
 
+    public void StartButtonPress()
+    {
+        if (StartResetButton.transform.GetChild(0).GetComponent<Text>().text == "Start")
+        {
+            StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Reset";
+            StartCoroutine(BeginSimulation());
+        }
+        else
+        {
+            StartResetButton.transform.GetChild(0).GetComponent<Text>().text = "Start";
+            for (int i = 0; i < actors.transform.childCount; i++)
+            {
+                Destroy(actors.transform.GetChild(i).gameObject);
+            }
+            isRunning = false;
+        }
+    }
     /// <summary>
     /// Initialize the prefab values.
     /// </summary>
@@ -278,6 +282,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartButtonPress();
+        }
+
         if (!isRunning) return;
 
         infectionTimer += Time.deltaTime;
