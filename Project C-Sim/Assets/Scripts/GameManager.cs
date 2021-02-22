@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
         InfectionRadius = 1.5f;
         scaleFactor = 1f;
         buildingHalfWidth = scaleFactor / 2.0f;
-        sepForceMult = 20.0f;
+        sepForceMult = 10.0f;
         isRunning = false;
         simValues = GameObject.Find("SimValues").GetComponent<SimulationValues>();
         GameObject simulation = GameObject.Find("Simulation");
@@ -369,7 +369,6 @@ public class GameManager : MonoBehaviour
                     else
                         distance = Vector3.SqrMagnitude(People[i].transform.position - People[j].transform.position);
 
-                    Debug.Log("Distance: " + distance);
                     float infectionChance = (1 / ((distance / 1.8f) + 1.0f / 12.0f)) / 100;
                     infectionChance *= (People[i].GetComponent<Person>().HasMask ? maskReduction : 1.0f) * (People[j].GetComponent<Person>().HasMask ? maskReduction : 1.0f);
                     infectionChance *= People[j].GetComponent<Person>().Recovered ? 0.1f : 1.0f;

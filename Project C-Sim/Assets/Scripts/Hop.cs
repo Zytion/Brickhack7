@@ -20,7 +20,7 @@ public class Hop : MonoBehaviour
     {
         if(!UIPerson)
         {
-            if (gameObject.GetComponent<Rigidbody2D>().velocity.magnitude > 0.01f)
+            if (gameObject.GetComponent<Person>().Moving)
             {
                 gameObject.transform.GetChild(0).transform.position = new Vector3(this.transform.position.x, this.transform.position.y + Mathf.Abs(Mathf.Sin((Time.time * speed + seed)) * height), this.transform.position.z);
             }

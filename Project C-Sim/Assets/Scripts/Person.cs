@@ -55,7 +55,7 @@ public class Person : MonoBehaviour
                 gameManager.GetComponent<AudioSource>().Play();
                 GameObject par = (GameObject)Instantiate(Resources.Load("InfectedParticle"), this.transform.position, Quaternion.identity);
                 par.transform.SetParent(this.transform);
-                recoverTime = Random.Range(10f, 45f);
+                recoverTime = Random.Range(5f, 25f);
                 GetComponentInChildren<SpriteRenderer>().color = Color.red;
             }
             infected = value;
@@ -97,6 +97,9 @@ public class Person : MonoBehaviour
     private float recoverTimer;
     private float recoverTime;
     private bool goToHosptial;
+    private Vector2 startPos;
+    private float travelTimer;
+    private float timeToTravel;
     
     // Start is called before the first frame update
     public void Start()
@@ -173,6 +176,9 @@ public class Person : MonoBehaviour
             if (inHouse)
             {
                 destination = gameManager.GetRandomBuilding();
+                startPos = this.transform.position;
+                travelTimer = 0;
+                timeToTravel = (destination - startPos).magnitude / 4;
                 // Is the person going to the hospital?
                 if (gameManager.HospitalPositions.Contains(destination))
                 {
@@ -183,6 +189,9 @@ public class Person : MonoBehaviour
             else
             {
                 destination = home.transform.position;
+                startPos = this.transform.position;
+                travelTimer = 0;
+                timeToTravel = (destination - startPos).magnitude / 4;
             }
             inHouse = !inHouse;
         }
@@ -202,14 +211,25 @@ public class Person : MonoBehaviour
             goToHosptial = false;
             return;
         }
+        travelTimer += Time.deltaTime;
+        startPos = destination + (((Vector2)transform.position - destination).normalized * (startPos - destination).magnitude);
+        this.transform.position = new Vector2(Mathf.Lerp(startPos.x, destination.x, travelTimer / timeToTravel),
+                                              Mathf.Lerp(startPos.y, destination.y, travelTimer / timeToTravel));
 
         closeToDest = Vector3.SqrMagnitude((Vector2)transform.position - destination) < destinationRadius * destinationRadius;
-
-        Vector2 netForce;
-        netForce = Seek(destination);
+        Vector2 netForce = Vector2.zero;
+        //netForce = Seek(destination);
         if (!closeToDest && SocialDistancing)
         {
             netForce += gameManager.GetSeperation(this.gameObject);
+        }
+
+        Vector2 pos = gameManager.SimulationPosition;
+        Vector2 ext = gameManager.SimulationExtents;
+        if (transform.position.x > pos.x + ext.x || transform.position.x < pos.x - ext.x ||
+            transform.position.y > pos.y + ext.y || transform.position.y < pos.y - ext.y)
+        {
+            netForce += (pos - (Vector2)transform.position) * 10f;
         }
         rb.AddForce(netForce);
     }
